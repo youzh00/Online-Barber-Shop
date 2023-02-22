@@ -10,12 +10,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
-
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
@@ -48,9 +42,91 @@ model User {
     name          String?
     email         String?   @unique
     emailVerified DateTime?
+    role          ROLE      @default(USER)
     image         String?
     accounts      Account[]
     sessions      Session[]
+    shop          Shop[]
+    rating        Rating?
+    Order         Order[]
+    createdAt     DateTime  @default(now())
+}
+
+enum ROLE {
+    USER
+    ADMIN
+    BARBER
+}
+
+model Shop {
+    id          String    @id @default(cuid())
+    name        String
+    address     String
+    type        GENDER    @default(MALE)
+    phone       String
+    email       String
+    queue       Int       @default(0)
+    pictures    String[]
+    description String
+    opening     DateTime
+    ending      DateTime
+    lat         Float
+    lng         Float
+    user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId      String
+    rating      Rating[]
+    haircut     Haircut[]
+    Order       Order[]
+    createdAt   DateTime  @default(now())
+}
+
+enum GENDER {
+    FEMALE
+    MALE
+}
+
+model Rating {
+    id        String   @id @default(cuid())
+    rating    Int
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String   @unique
+    shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+    shopId    String
+    createdAt DateTime @default(now())
+}
+
+model Haircut {
+    id          String   @id @default(cuid())
+    name        String
+    description String
+    picture     String
+    price       Int
+    Shop        Shop     @relation(fields: [shopId], references: [id])
+    shopId      String
+    Order       Order[]
+    createdAt   DateTime @default(now())
+}
+
+model Order {
+    id          String   @id @default(cuid())
+    date        DateTime
+    status      STATUS   @default(NEW)
+    user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId      String
+    shop        Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+    shopId      String
+    haircut     Haircut  @relation(fields: [haircutId], references: [id], onDelete: Cascade)
+    haircutId   String
+    queueNumber Int
+    createdAt   DateTime @default(now())
+}
+
+enum STATUS {
+    NEW
+    PENDING
+    PAID
+    DONE
+    CANCELED
 }
 
 model VerificationToken {

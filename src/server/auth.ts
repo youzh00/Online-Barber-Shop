@@ -9,6 +9,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "../env.mjs";
 import { prisma } from "./db";
+import Credentials from "next-auth/providers/credentials.js";
 
 /**
  * Module augmentation for `next-auth` types.
@@ -57,6 +58,29 @@ export const authOptions: NextAuthOptions = {
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     }),
+    // Credentials({
+    //   name: "Credentials",
+    //   credentials: {
+    //     email: { label: "email", type: "text", placeholder: "email" },
+    //     password: { label: "Password", type: "password" },
+    //   },
+    //   async authorize(credentials,req) {
+    //     const user = await prisma.user.findUnique({
+    //       where: { email: credentials?.email },
+    //     });
+    //     if (!user) {
+    //       return null;
+    //     }
+    //     const isValid = await bcrypt.compare(
+    //       credentials.password,
+    //       user.password
+    //     );
+    //     if (!isValid) {
+    //       return null;
+    //     }
+    //     return user;
+    //   }
+    // }),
     /**
      * ...add more providers here
      *
