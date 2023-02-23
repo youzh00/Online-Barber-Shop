@@ -11,6 +11,7 @@ export const barberRouter = createTRPCRouter({
           user: { connect: { id: user.id } },
         },
       });
+      return shop;
     }),
   //   hello: publicProcedure
   //     .input(z.object({ text: z.string() }))

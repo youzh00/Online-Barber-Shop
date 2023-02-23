@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
@@ -6,6 +6,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import Image from "next/image";
+import { api } from "../utils/api";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -26,6 +27,25 @@ const userNavigation = [
 export default function Example() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: sessionData } = useSession();
+  const shop=api.barber.createShop.useMutation({onSuccess:(data)=>{
+      console.log(data);
+  }});
+  // useEffect(()=>{
+    
+  //   shop.mutate({
+  //     name: "barber shop",
+  //   address: "123 main street",
+  //   type: "BOTH",
+  //   phone: "123-456-7890",
+  //   email: "youssef.lll@gmail.com",
+  //   queue: 5,
+  //   pictures: ["https://www.google.com"],
+  //   description: "this is a barber shop",
+  //   opening: new Date(),
+  //   closing: new Date(),
+  //   lat: 123,
+  //   lng: 456,})
+  // },[])
 
   return (
     <div className="isolate bg-white">
