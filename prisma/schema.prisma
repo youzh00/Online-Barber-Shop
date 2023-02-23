@@ -69,7 +69,7 @@ model Shop {
     pictures    String[]
     description String
     opening     DateTime
-    ending      DateTime
+    closing     DateTime
     lat         Float
     lng         Float
     user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -83,6 +83,7 @@ model Shop {
 enum GENDER {
     FEMALE
     MALE
+    BOTH
 }
 
 model Rating {
