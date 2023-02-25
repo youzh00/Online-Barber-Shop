@@ -27,11 +27,12 @@ const userNavigation = [
 export default function Example() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: sessionData } = useSession();
-  const shop=api.barber.createShop.useMutation({onSuccess:(data)=>{
+  const shop=api.barber.deleteShop.useMutation({onSuccess:(data)=>{
       console.log(data);
   }});
-  // useEffect(()=>{
+  useEffect(()=>{
     
+    shop.mutate({id:"clehh8zhx0000vzq4c54plm0p"})
   //   shop.mutate({
   //     name: "barber shop",
   //   address: "123 main street",
@@ -45,7 +46,7 @@ export default function Example() {
   //   closing: new Date(),
   //   lat: 123,
   //   lng: 456,})
-  // },[])
+  },[])
 
   return (
     <div className="isolate bg-white">
