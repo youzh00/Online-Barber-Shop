@@ -1,5 +1,6 @@
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { shopSchema } from "../Schemas/ShopType";
+import { HaircutSchema } from "../Schemas/HaircutType";
 import { z } from "zod";
 export const barberRouter = createTRPCRouter({
   createShop: protectedProcedure
@@ -33,6 +34,20 @@ export const barberRouter = createTRPCRouter({
         where: { id: input.id },
       });
       return shop;
+    }),
+  AddHaircutToShop: protectedProcedure
+    .input(HaircutSchema)
+    .mutation(async ({ input, ctx }) => {
+      const haircut = await ctx.prisma.haircut.create({
+        data: {
+          description: input.description,
+          name: input.name,
+          price: input.price,
+          picture: input.picture,
+          shopId: input.shopId,
+        },
+      });
+      return haircut;
     }),
   //   hello: publicProcedure
   //     .input(z.object({ text: z.string() }))

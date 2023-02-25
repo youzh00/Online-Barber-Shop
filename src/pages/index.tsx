@@ -32,7 +32,7 @@ export default function Example() {
   }});
   useEffect(()=>{
     
-    shop.mutate({id:"clehh8zhx0000vzq4c54plm0p"})
+    // shop.mutate({id:"clehh8zhx0000vzq4c54plm0p"})
   //   shop.mutate({
   //     name: "barber shop",
   //   address: "123 main street",
