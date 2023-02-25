@@ -13,6 +13,22 @@ export const shopSchema = z.object({
   lat: z.number(),
   lng: z.number(),
 });
+
+export const shopSchemaUpdate = z.object({
+  shopId: z.string().optional(),
+  name: z.string().optional(),
+  address: z.string().optional(),
+  type: z.enum(["FEMALE", "MALE", "BOTH"]).optional(),
+  phone: z.string().optional(),
+  email: z.string().optional(),
+  queue: z.number().optional(),
+  pictures: z.array(z.string().url()).optional(),
+  description: z.string().optional(),
+  opening: z.date().optional(),
+  closing: z.date().optional(),
+  lat: z.number().optional(),
+  lng: z.number().optional(),
+});
 // can you seed of the above object
 // const shop: z.infer<typeof shopSchema> = {
 //   name: "barber shop",
