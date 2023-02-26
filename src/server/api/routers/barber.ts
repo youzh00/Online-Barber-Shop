@@ -55,6 +55,20 @@ export const barberRouter = createTRPCRouter({
       });
       return shop;
     }),
+  GetShopById: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const shop = await ctx.prisma.shop.findUnique({
+        where: { id: input.id },
+      });
+      if (!shop) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Shop does not exist",
+        });
+      }
+      return shop;
+    }),
   // Haircuts part
   AddHaircutToShop: protectedProcedure
     .input(HaircutSchema)
