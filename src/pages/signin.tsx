@@ -6,35 +6,11 @@ import { getProviders, signIn } from "next-auth/react";
 import Image from "next/image";
 import { getServerAuthSession } from "../server/auth";
 
-/*
-  This example requires Tailwind CSS v2.0+ 
-  
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
 export default function Signin({
   providers,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-gray-50">
-        <body class="h-full">
-        ```
-      */}
       <div className="flex min-h-screen flex-col justify-center bg-gray-50 py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <div className="text-center text-4xl font-bold text-indigo-700">
@@ -44,7 +20,7 @@ export default function Signin({
             Sign in to your account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Or{" "}
+            Or
             <a
               href="#"
               className="font-medium text-indigo-600 hover:text-indigo-500"
@@ -169,11 +145,6 @@ export default function Signin({
                       </div>
                     </a>
                   </div>
-                  // <div key={provider.name}>
-                  //   <button onClick={() => signIn(provider.id)}>
-                  //     Sign in with {provider.name}
-                  //   </button>
-                  // </div>
                 ))}
               </div>
             </div>

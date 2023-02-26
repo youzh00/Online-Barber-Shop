@@ -1,9 +1,9 @@
-import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
-import { shopSchema, shopSchemaUpdate } from "../Schemas/ShopType";
-import { HaircutSchema, HaircutSchemaForUpdate } from "../Schemas/HaircutType";
-import { z } from "zod";
-import { prisma } from "../../db";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+import { HaircutSchema, HaircutSchemaForUpdate } from "../Schemas/HaircutType";
+import { shopSchema, shopSchemaUpdate } from "../Schemas/ShopType";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
+
 export const barberRouter = createTRPCRouter({
   createShop: protectedProcedure
     .input(shopSchema)
@@ -129,7 +129,7 @@ export const barberRouter = createTRPCRouter({
       }
       const { haircutId, ...haircutData } = input;
       const haircut = await ctx.prisma.haircut.update({
-        where: { id: input.haircutId },
+        where: { id: haircutId },
         data: {
           ...haircutData,
         },

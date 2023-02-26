@@ -1,12 +1,10 @@
-import { useEffect, useState } from "react";
-import { Dialog } from "@headlessui/react";
+import { Dialog, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { Fragment } from "react";
-import { Menu, Transition } from "@headlessui/react";
 import Image from "next/image";
-import { api } from "../utils/api";
+import Link from "next/link";
+import { Fragment, useState } from "react";
+import Banner from "../components/Banner";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -27,26 +25,8 @@ const userNavigation = [
 export default function Example() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: sessionData } = useSession();
-  const shop=api.barber.deleteShop.useMutation({onSuccess:(data)=>{
-      console.log(data);
-  }});
-  useEffect(()=>{
-    
-    // shop.mutate({id:"clehh8zhx0000vzq4c54plm0p"})
-  //   shop.mutate({
-  //     name: "barber shop",
-  //   address: "123 main street",
-  //   type: "BOTH",
-  //   phone: "123-456-7890",
-  //   email: "youssef.lll@gmail.com",
-  //   queue: 5,
-  //   pictures: ["https://www.google.com"],
-  //   description: "this is a barber shop",
-  //   opening: new Date(),
-  //   closing: new Date(),
-  //   lat: 123,
-  //   lng: 456,})
-  },[])
+  const [visible, setVisible] = useState(true);
+  console.log(sessionData?.user);
 
   return (
     <div className="isolate bg-white">
@@ -232,32 +212,10 @@ export default function Example() {
               </div>
             </div>
           </div>
-          {/* <div className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]">
-            <svg
-              className="relative left-[calc(50%+3rem)] h-[21.1875rem] max-w-none -translate-x-1/2 sm:left-[calc(50%+36rem)] sm:h-[42.375rem]"
-              viewBox="0 0 1155 678"
-            >
-              <path
-                fill="url(#ecb5b0c9-546c-4772-8c71-4d3f06d544bc)"
-                fillOpacity=".3"
-                d="M317.219 518.975L203.852 678 0 438.341l317.219 80.634 204.172-286.402c1.307 132.337 45.083 346.658 209.733 145.248C936.936 126.058 882.053-94.234 1031.02 41.331c119.18 108.451 130.68 295.337 121.53 375.223L855 299l21.173 362.054-558.954-142.079z"
-              />
-              <defs>
-                <linearGradient
-                  id="ecb5b0c9-546c-4772-8c71-4d3f06d544bc"
-                  x1="1155.49"
-                  x2="-78.208"
-                  y1=".177"
-                  y2="474.645"
-                  gradientUnits="userSpaceOnUse"
-                >
-                  <stop stopColor="#9089FC" />
-                  <stop offset={1} stopColor="#FF80B5" />
-                </linearGradient>
-              </defs>
-            </svg>
-          </div> */}
         </div>
+        {visible && sessionData?.user.role === "USER" && (
+          <Banner setVisible={setVisible} />
+        )}
       </main>
     </div>
   );
