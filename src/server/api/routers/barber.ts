@@ -55,7 +55,7 @@ export const barberRouter = createTRPCRouter({
       });
       return shop;
     }),
-  GetShopById: protectedProcedure
+  getShopById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
       const shop = await ctx.prisma.shop.findUnique({
@@ -70,7 +70,7 @@ export const barberRouter = createTRPCRouter({
       return shop;
     }),
   // Haircuts part
-  AddHaircutToShop: protectedProcedure
+  addHaircutToShop: protectedProcedure
     .input(HaircutSchema)
     .mutation(async ({ input, ctx }) => {
       const haircut = await ctx.prisma.haircut.create({
@@ -84,7 +84,21 @@ export const barberRouter = createTRPCRouter({
       });
       return haircut;
     }),
-  DeleteHaircut: protectedProcedure
+  getHaircutById: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const haircut = await ctx.prisma.haircut.findUnique({
+        where: { id: input.id },
+      });
+      if (!haircut) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Haircut does not exist",
+        });
+      }
+      return haircut;
+    }),
+  deleteHaircut: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const exist = await ctx.prisma.haircut.findUnique({
@@ -101,7 +115,7 @@ export const barberRouter = createTRPCRouter({
       });
       return haircut;
     }),
-  UpdateHaircut: protectedProcedure
+  updateHaircut: protectedProcedure
     .input(HaircutSchemaForUpdate)
     .mutation(async ({ input, ctx }) => {
       const exist = await ctx.prisma.haircut.findUnique({
@@ -122,19 +136,4 @@ export const barberRouter = createTRPCRouter({
       });
       return haircut;
     }),
-  //   hello: publicProcedure
-  //     .input(z.object({ text: z.string() }))
-  //     .query(({ input }) => {
-  //       return {
-  //         greeting: `Hello ${input.text}`,
-  //       };
-  //     }),
-
-  //   getAll: publicProcedure.query(({ ctx }) => {
-  //     return ctx.prisma.example.findMany();
-  //   }),
-
-  //   getSecretMessage: protectedProcedure.query(() => {
-  //     return "you can now see this secret message!";
-  //   }),
 });
