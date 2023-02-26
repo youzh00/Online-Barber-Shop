@@ -1,6 +1,6 @@
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 import { shopSchema, shopSchemaUpdate } from "../Schemas/ShopType";
-import { HaircutSchema } from "../Schemas/HaircutType";
+import { HaircutSchema, HaircutSchemaForUpdate } from "../Schemas/HaircutType";
 import { z } from "zod";
 import { prisma } from "../../db";
 import { TRPCError } from "@trpc/server";
@@ -41,11 +41,21 @@ export const barberRouter = createTRPCRouter({
   deleteShop: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {
+      const exist = await ctx.prisma.shop.findUnique({
+        where: { id: input.id },
+      });
+      if (!exist) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Shop does not exist",
+        });
+      }
       const shop = await ctx.prisma.shop.delete({
         where: { id: input.id },
       });
       return shop;
     }),
+  // Haircuts part
   AddHaircutToShop: protectedProcedure
     .input(HaircutSchema)
     .mutation(async ({ input, ctx }) => {
@@ -56,6 +66,44 @@ export const barberRouter = createTRPCRouter({
           price: input.price,
           picture: input.picture,
           shopId: input.shopId,
+        },
+      });
+      return haircut;
+    }),
+  DeleteHaircut: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const exist = await ctx.prisma.haircut.findUnique({
+        where: { id: input.id },
+      });
+      if (!exist) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Haircut does not exist",
+        });
+      }
+      const haircut = await ctx.prisma.haircut.delete({
+        where: { id: input.id },
+      });
+      return haircut;
+    }),
+  UpdateHaircut: protectedProcedure
+    .input(HaircutSchemaForUpdate)
+    .mutation(async ({ input, ctx }) => {
+      const exist = await ctx.prisma.haircut.findUnique({
+        where: { id: input.haircutId },
+      });
+      if (!exist) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Haircut does not exist",
+        });
+      }
+      const { haircutId, ...haircutData } = input;
+      const haircut = await ctx.prisma.haircut.update({
+        where: { id: input.haircutId },
+        data: {
+          ...haircutData,
         },
       });
       return haircut;
