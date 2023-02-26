@@ -1,8 +1,7 @@
-import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { shopSchema, shopSchemaUpdate } from "../Schemas/ShopType";
 import { HaircutSchema, HaircutSchemaForUpdate } from "../Schemas/HaircutType";
 import { z } from "zod";
-import { prisma } from "../../db";
 import { TRPCError } from "@trpc/server";
 export const barberRouter = createTRPCRouter({
   createShop: protectedProcedure
