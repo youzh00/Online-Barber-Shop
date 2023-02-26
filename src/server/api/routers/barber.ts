@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { HaircutSchema, HaircutSchemaForUpdate } from "../Schemas/HaircutType";
-import { shopSchema, shopSchemaUpdate } from "../Schemas/ShopType";
+import { HaircutSchema, HaircutSchemaForUpdate } from "../schemas/haircut";
+import { shopSchema, shopSchemaUpdate } from "../schemas/shop";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const barberRouter = createTRPCRouter({
