@@ -1,10 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { shopSchema, shopSchemaUpdate } from "../schemas/shop";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { barberProcedure, createTRPCRouter } from "../trpc";
 
 export const shopRouter = createTRPCRouter({
-  createShop: protectedProcedure
+  createShop: barberProcedure
     .input(shopSchema)
     .mutation(async ({ input, ctx }) => {
       const user = ctx.session.user;
@@ -16,7 +16,7 @@ export const shopRouter = createTRPCRouter({
       });
       return shop;
     }),
-  updateShop: protectedProcedure
+  updateShop: barberProcedure
     .input(shopSchemaUpdate)
     .mutation(async ({ input, ctx }) => {
       const exist = await ctx.prisma.shop.findUnique({
@@ -37,7 +37,7 @@ export const shopRouter = createTRPCRouter({
       });
       return shop;
     }),
-  deleteShop: protectedProcedure
+  deleteShop: barberProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const exist = await ctx.prisma.shop.findUnique({
@@ -54,7 +54,7 @@ export const shopRouter = createTRPCRouter({
       });
       return shop;
     }),
-  getShopById: protectedProcedure
+  getShopById: barberProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
       const shop = await ctx.prisma.shop.findUnique({

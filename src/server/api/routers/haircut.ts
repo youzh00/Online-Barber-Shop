@@ -1,10 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { HaircutSchema, HaircutSchemaForUpdate } from "../schemas/haircut";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { barberProcedure, createTRPCRouter } from "../trpc";
 
 export const haircutRouter = createTRPCRouter({
-  addHaircutToShop: protectedProcedure
+  addHaircutToShop: barberProcedure
     .input(HaircutSchema)
     .mutation(async ({ input, ctx }) => {
       const haircut = await ctx.prisma.haircut.create({
@@ -18,7 +18,7 @@ export const haircutRouter = createTRPCRouter({
       });
       return haircut;
     }),
-  getHaircutById: protectedProcedure
+  getHaircutById: barberProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
       const haircut = await ctx.prisma.haircut.findUnique({
@@ -32,7 +32,7 @@ export const haircutRouter = createTRPCRouter({
       }
       return haircut;
     }),
-  deleteHaircut: protectedProcedure
+  deleteHaircut: barberProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {
       const exist = await ctx.prisma.haircut.findUnique({
@@ -49,7 +49,7 @@ export const haircutRouter = createTRPCRouter({
       });
       return haircut;
     }),
-  updateHaircut: protectedProcedure
+  updateHaircut: barberProcedure
     .input(HaircutSchemaForUpdate)
     .mutation(async ({ input, ctx }) => {
       const exist = await ctx.prisma.haircut.findUnique({
