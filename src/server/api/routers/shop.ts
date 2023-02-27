@@ -1,7 +1,12 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { shopSchema, shopSchemaUpdate } from "../schemas/shop";
-import { barberProcedure, createTRPCRouter } from "../trpc";
+import {
+  barberProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "../trpc";
 
 export const shopRouter = createTRPCRouter({
   createShop: barberProcedure
@@ -68,4 +73,8 @@ export const shopRouter = createTRPCRouter({
       }
       return shop;
     }),
+  getAllShops: protectedProcedure.query(async ({ ctx }) => {
+    const shops = await ctx.prisma.shop.findMany();
+    return shops;
+  }),
 });
