@@ -11,7 +11,7 @@ const navigation = [
 
 export default function Section() {
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative overflow-hidden h-full">
       <main>
         <div className="bg-sectionColor pt-10 sm:pt-16 lg:overflow-hidden lg:pt-8 lg:pb-14">
           <div className="mx-auto max-w-7xl lg:px-8">

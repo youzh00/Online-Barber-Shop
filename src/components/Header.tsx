@@ -123,7 +123,7 @@ const Header = () => {
                 onClick={() => void signIn()}
                 className="text-sm font-semibold leading-6 text-gray-900"
               >
-                 iLogn
+                 Log in
               </button>
             )}
           </div>
