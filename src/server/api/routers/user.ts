@@ -45,4 +45,12 @@ export const userRouter = createTRPCRouter({
 
     return user;
   }),
+  getCurrentUser: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session.user.id;
+    const user = await ctx.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    return user;
+  }),
 });
