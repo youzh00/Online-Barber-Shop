@@ -2,18 +2,10 @@ import { signIn } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-const navigation = [
-  { name: 'Product', href: '#' },
-  { name: 'Features', href: '#' },
-  { name: 'Marketplace', href: '#' },
-  { name: 'Company', href: '#' },
-]
-
 export default function Section() {
   return (
-    <div className="relative overflow-hidden h-full">
-      <main>
-        <div className="bg-sectionColor pt-10 sm:pt-16 lg:overflow-hidden lg:pt-8 lg:pb-14">
+      <main className='h-[calc(100vh-6rem)]'>
+        <div className="bg-sectionColor pt-10 sm:pt-16 lg:overflow-hidden lg:pt-8 lg:pb-14 h-full ">
           <div className="mx-auto max-w-7xl lg:px-8">
             <div className="lg:grid lg:grid-cols-2 lg:gap-8">
               <div className="mx-auto max-w-md px-4 sm:max-w-2xl sm:px-6 sm:text-center lg:flex lg:items-center lg:px-0 lg:text-left">
@@ -28,7 +20,7 @@ export default function Section() {
                   Whether you‘re looking for a classic cut or a trendy new style,our platform has you covered.
                   </p>
                   <div className="mt-10 sm:mt-12">
-                        {/* fdddd */}
+                   
                     <div className="mt-10 flex items-center  gap-x-6">
                         <Link  href="#"
                             onClick={() => void signIn()}
@@ -60,9 +52,6 @@ export default function Section() {
             </div>
           </div>
         </div>
-
-        {/* More main page content here... */}
       </main>
-    </div>
   )
 }
