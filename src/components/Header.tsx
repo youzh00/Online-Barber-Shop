@@ -20,11 +20,11 @@ const userNavigation = [
   { name: "Your Profile", href: "#" },
   { name: "Settings", href: "#" },
 ];
-const Header = () => {
+const Header = ({ transparent = false }: { transparent?: boolean }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: sessionData } = useSession();
   return (
-    <div className=" bg-sectionColor  h-24 ">
+    <div className={classNames(transparent ? "" : "bg-sectionColor", "h-24")}>
       <div className="px-6 pt-6 lg:px-8">
         <nav className="flex items-center justify-between" aria-label="Global">
           <div className="flex lg:flex-1">
@@ -50,7 +50,7 @@ const Header = () => {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-sm font-semibold leading-6 text-gray-900"
+                className="text-sm font-semibold leading-6 text-gray-100"
               >
                 {item.name}
               </Link>
@@ -123,7 +123,7 @@ const Header = () => {
                 onClick={() => void signIn()}
                 className="text-sm font-semibold leading-6 text-gray-900"
               >
-                 Log in
+                Log in
               </button>
             )}
           </div>
@@ -179,8 +179,8 @@ const Header = () => {
           </Dialog.Panel>
         </Dialog>
       </div>
-   </div>
-  )
-}
+    </div>
+  );
+};
 
-export default Header
+export default Header;
