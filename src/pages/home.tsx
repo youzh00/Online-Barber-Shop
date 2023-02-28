@@ -1,11 +1,14 @@
 import React from 'react'
 import { api } from '../utils/api'
 import Header from '../components/Header'
+import Section from '../components/Section'
 
 
 const home = () => {
   return (
-    <Header/>
+    <div>
+      <Header/>
+    </div>
   )
 }
 

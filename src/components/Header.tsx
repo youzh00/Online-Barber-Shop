@@ -23,16 +23,14 @@ const userNavigation = [
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: sessionData } = useSession();
-  const [visible, setVisible] = useState(true);
-  console.log(sessionData?.user);
   return (
-    <div className="isolate bg-white ">
+    <div className=" bg-sectionColor  h-24 ">
       <div className="px-6 pt-6 lg:px-8">
         <nav className="flex items-center justify-between" aria-label="Global">
           <div className="flex lg:flex-1">
             <Link href="/" className="-m-1.5 p-1.5">
               <span className="sr-only">BarberShop</span>
-              <span className="text-2xl font-bold text-indigo-700">
+              <span className="text-2xl font-bold text-sectionBlue">
                 BarberShop
               </span>
             </Link>
@@ -49,13 +47,13 @@ const Header = () => {
           </div>
           <div className="hidden lg:flex lg:gap-x-12">
             {navigation.map((item) => (
-              <a
+              <Link
                 key={item.name}
                 href={item.href}
                 className="text-sm font-semibold leading-6 text-gray-900"
               >
                 {item.name}
-              </a>
+              </Link>
             ))}
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
@@ -125,7 +123,7 @@ const Header = () => {
                 onClick={() => void signIn()}
                 className="text-sm font-semibold leading-6 text-gray-900"
               >
-                Log in
+                 iLogn
               </button>
             )}
           </div>
