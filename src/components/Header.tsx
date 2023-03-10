@@ -24,7 +24,7 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: sessionData } = useSession();
   return (
-    <div className=" bg-sectionColor  h-24 ">
+    <div className=" h-24  bg-sectionColor ">
       <div className="px-6 pt-6 lg:px-8">
         <nav className="flex items-center justify-between" aria-label="Global">
           <div className="flex lg:flex-1">
@@ -123,7 +123,7 @@ const Header = () => {
                 onClick={() => void signIn()}
                 className="text-sm font-semibold leading-6 text-gray-900"
               >
-                 Log in
+                Log in
               </button>
             )}
           </div>
@@ -179,8 +179,8 @@ const Header = () => {
           </Dialog.Panel>
         </Dialog>
       </div>
-   </div>
-  )
-}
+    </div>
+  );
+};
 
-export default Header
+export default Header;
