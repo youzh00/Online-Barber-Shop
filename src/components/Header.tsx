@@ -23,8 +23,14 @@ const userNavigation = [
 const Header = ({ transparent = false }: { transparent?: boolean }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: sessionData } = useSession();
+
   return (
-    <div className=" h-24  bg-sectionColor ">
+    <div
+      className={classNames(
+        "h-24",
+        transparent ? "bg-transparent" : "bg-sectionColor"
+      )}
+    >
       <div className="px-6 pt-6 lg:px-8">
         <nav className="flex items-center justify-between" aria-label="Global">
           <div className="flex lg:flex-1">
