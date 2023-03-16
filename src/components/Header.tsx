@@ -92,7 +92,7 @@ const Header = ({ transparent = false }: { transparent?: boolean }) => {
                     {userNavigation.map((item) => (
                       <Menu.Item key={item.name}>
                         {({ active }) => (
-                          <a
+                          <Link
                             href={item.href}
                             className={classNames(
                               active ? "bg-gray-100" : "",
@@ -100,13 +100,13 @@ const Header = ({ transparent = false }: { transparent?: boolean }) => {
                             )}
                           >
                             {item.name}
-                          </a>
+                          </Link>
                         )}
                       </Menu.Item>
                     ))}
                     <Menu.Item key={"signout"}>
                       {({ active }) => (
-                        <a
+                        <Link
                           href="#"
                           onClick={(e) => {
                             e.preventDefault();
@@ -118,7 +118,7 @@ const Header = ({ transparent = false }: { transparent?: boolean }) => {
                           )}
                         >
                           Sign out
-                        </a>
+                        </Link>
                       )}
                     </Menu.Item>
                   </Menu.Items>
@@ -169,7 +169,7 @@ const Header = ({ transparent = false }: { transparent?: boolean }) => {
                   ))}
                 </div>
                 <div className="py-6">
-                  <a
+                  <Link
                     href="#"
                     onClick={(e) => {
                       e.preventDefault();
@@ -178,7 +178,7 @@ const Header = ({ transparent = false }: { transparent?: boolean }) => {
                     className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-6 text-gray-900 hover:bg-gray-400/10"
                   >
                     {sessionData ? "Log out" : "Log in"}
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

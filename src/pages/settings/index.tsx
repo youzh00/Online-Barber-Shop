@@ -10,6 +10,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { Fragment, useEffect, useState } from "react";
 import { api } from "../../utils/api";
+import Link from "next/link";
 
 const subNavigation = [
   {
@@ -18,8 +19,13 @@ const subNavigation = [
     icon: UserCircleIcon,
     current: true,
   },
-  { name: "Account", href: "#", icon: CogIcon, current: false },
-  { name: "Password", href: "#", icon: KeyIcon, current: false },
+  { name: "Account", href: "settings/account", icon: CogIcon, current: false },
+  {
+    name: "Password",
+    href: "settings/password",
+    icon: KeyIcon,
+    current: false,
+  },
 ];
 const userNavigation = [
   { name: "Your Profile", href: "#" },
@@ -48,7 +54,7 @@ export default function SettingsPage() {
   }, [data?.user.role]);
 
   function handleSave(e: React.MouseEvent<HTMLFormElement, MouseEvent>) {
-    e.preventDefault();
+    // e.preventDefault();
     if (username !== "" && username !== null) {
       updateProfile.mutate({
         name: username,
@@ -252,7 +258,7 @@ export default function SettingsPage() {
               <aside className="py-6 lg:col-span-3">
                 <nav className="space-y-1">
                   {subNavigation.map((item) => (
-                    <a
+                    <Link
                       key={item.name}
                       href={item.href}
                       className={classNames(
@@ -273,7 +279,7 @@ export default function SettingsPage() {
                         aria-hidden="true"
                       />
                       <span className="truncate">{item.name}</span>
-                    </a>
+                    </Link>
                   ))}
                 </nav>
               </aside>
