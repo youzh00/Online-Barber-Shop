@@ -31,13 +31,16 @@ export default function SettingsPage() {
   const becomeBarber = api.user.updateToBarber.useMutation();
   const updateProfile = api.user.updateUser.useMutation();
 
-  const isBarber = data?.user.role == "BARBER" ? true : false;
+  const isBarber = data?.user.role === "BARBER";
 
-  const [availableToSwitch, setAvailableToSwitch] = useState(isBarber);
+  const [availableToSwitch, setAvailableToSwitch] = useState(false);
   const [userName, setUserName] = useState("");
   useEffect(() => {
     setUserName(data?.user.name || "");
   }, [data?.user.name]);
+  useEffect(() => {
+    setAvailableToSwitch(data?.user.role === "BARBER");
+  }, [data?.user.role]);
   function onNameChange(e: ChangeEvent<HTMLInputElement>) {
     setUserName(e.target?.value);
   }
@@ -414,7 +417,7 @@ export default function SettingsPage() {
                         </div>
                         <Switch
                           checked={availableToSwitch}
-                          onChange={() => setAvailableToSwitch(isBarber)}
+                          onChange={(checked) => setAvailableToSwitch(checked)}
                           disabled={isBarber}
                           className={classNames(
                             availableToSwitch ? "bg-teal-500" : "bg-gray-200",
@@ -434,16 +437,10 @@ export default function SettingsPage() {
                       </Switch.Group>
                     </ul>
                   </div>
-                  <div className="mt-4 flex justify-end py-4 px-4 sm:px-6">
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
-                    >
-                      Cancel
-                    </button>
+                  <div className="mt-4 py-4 px-4 sm:px-6">
                     <button
                       type="submit"
-                      className="ml-5 inline-flex justify-center rounded-md border border-transparent bg-sky-700 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+                      className="ml-auto block rounded-md border border-transparent bg-sky-700 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
                     >
                       Save
                     </button>
