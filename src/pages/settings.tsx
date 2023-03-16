@@ -34,22 +34,19 @@ export default function SettingsPage() {
   const isBarber = data?.user.role === "BARBER";
 
   const [availableToSwitch, setAvailableToSwitch] = useState(false);
-  const [userName, setUserName] = useState("");
+  const [username, setUsername] = useState("");
   useEffect(() => {
-    setUserName(data?.user.name || "");
+    setUsername(data?.user.name || "");
   }, [data?.user.name]);
   useEffect(() => {
     setAvailableToSwitch(data?.user.role === "BARBER");
   }, [data?.user.role]);
-  function onNameChange(e: ChangeEvent<HTMLInputElement>) {
-    setUserName(e.target?.value);
-  }
 
   function handleSave(e: React.MouseEvent<HTMLFormElement, MouseEvent>) {
     e.preventDefault();
-    if (userName !== "" && userName !== null) {
+    if (username !== "" && username !== null) {
       updateProfile.mutate({
-        name: userName,
+        name: username,
       });
     }
     becomeBarber.mutate({
@@ -304,11 +301,11 @@ export default function SettingsPage() {
                         </label>
                         <div className="mt-1 border-b border-gray-300 focus-within:border-blue-700">
                           <input
-                            onChange={(e) => setUserName(e.target.value)}
+                            onChange={(e) => setUsername(e.target.value)}
                             type="text"
                             name="name"
                             id="name"
-                            value={userName || ""}
+                            value={username || ""}
                             className="block w-full border-0 border-b border-transparent bg-gray-50 focus:border-indigo-600 focus:ring-0 sm:text-sm"
                           />
                         </div>
@@ -421,7 +418,7 @@ export default function SettingsPage() {
                           disabled={isBarber}
                           className={classNames(
                             availableToSwitch ? "bg-teal-500" : "bg-gray-200",
-                            "relative ml-4 inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+                            "relative ml-4 inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 disabled:bg-teal-300 disabled:hover:cursor-not-allowed"
                           )}
                         >
                           <span
