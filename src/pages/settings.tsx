@@ -304,7 +304,7 @@ export default function SettingsPage() {
                         </label>
                         <div className="mt-1 border-b border-gray-300 focus-within:border-blue-700">
                           <input
-                            onChange={onNameChange}
+                            onChange={(e) => setUserName(e.target.value)}
                             type="text"
                             name="name"
                             id="name"
