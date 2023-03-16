@@ -1,4 +1,4 @@
-import { ChangeEvent, Fragment, useState } from "react";
+import { ChangeEvent, Fragment, useEffect, useState } from "react";
 import { Disclosure, Menu, Switch, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -28,21 +28,19 @@ function classNames(...classes: string[]) {
 
 export default function SettingsPage() {
   const { data } = useSession();
+  const becomeBarber = api.user.updateToBarber.useMutation();
+  const updateProfile = api.user.updateUser.useMutation();
 
   const isBarber = data?.user.role == "BARBER" ? true : false;
 
   const [availableToSwitch, setAvailableToSwitch] = useState(isBarber);
-  const [userName, setUserName] = useState(data?.user.name);
-
-  const onNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const [userName, setUserName] = useState("");
+  useEffect(() => {
+    setUserName(data?.user.name || "");
+  }, [data?.user.name]);
+  function onNameChange(e: ChangeEvent<HTMLInputElement>) {
     setUserName(e.target?.value);
-  };
-  const becomeBarber = api.user.updateToBarber.useMutation({
-    onSuccess: () => {
-      console.log("success");
-    },
-  });
-  const updateProfile = api.user.updateUser.useMutation();
+  }
 
   function handleSave(e: React.MouseEvent<HTMLFormElement, MouseEvent>) {
     e.preventDefault();
@@ -278,7 +276,7 @@ export default function SettingsPage() {
                 className="divide-y divide-gray-200 lg:col-span-9"
                 action="#"
                 method="POST"
-                onClick={handleSave}
+                onSubmit={handleSave}
               >
                 {/* Profile section */}
                 <div className="py-6 px-4 sm:p-6 lg:pb-8">
@@ -295,20 +293,20 @@ export default function SettingsPage() {
                   <div className="mt-6 flex flex-col lg:flex-row">
                     <div className="flex-grow space-y-6">
                       <div>
-                        <div className="col-span-12 sm:col-span-6">
-                          <label
-                            htmlFor="name"
-                            className="block text-sm font-medium text-gray-700"
-                          >
-                            User name
-                          </label>
+                        <label
+                          htmlFor="name"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          Name
+                        </label>
+                        <div className="mt-1 border-b border-gray-300 focus-within:border-blue-700">
                           <input
                             onChange={onNameChange}
                             type="text"
-                            value={userName || ""}
                             name="name"
                             id="name"
-                            className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-sky-500 focus:outline-none focus:ring-sky-500 sm:text-sm"
+                            value={userName || ""}
+                            className="block w-full border-0 border-b border-transparent bg-gray-50 focus:border-indigo-600 focus:ring-0 sm:text-sm"
                           />
                         </div>
                       </div>
