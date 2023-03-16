@@ -417,7 +417,7 @@ export default function SettingsPage() {
                         </div>
                         <Switch
                           checked={availableToSwitch}
-                          onChange={(checked) => setAvailableToSwitch(checked)}
+                          onChange={setAvailableToSwitch}
                           disabled={isBarber}
                           className={classNames(
                             availableToSwitch ? "bg-teal-500" : "bg-gray-200",
