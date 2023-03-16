@@ -28,11 +28,12 @@ function classNames(...classes: string[]) {
 
 export default function SettingsPage() {
   const { data } = useSession();
+
   const isBarber = data?.user.role == "BARBER" ? true : false;
 
   const [availableToSwitch, setAvailableToSwitch] = useState(isBarber);
-  const name = data?.user.name;
-  const [userName, setUserName] = useState(name);
+  const [userName, setUserName] = useState(data?.user.name);
+
   const onNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUserName(e.target?.value);
   };
@@ -43,15 +44,17 @@ export default function SettingsPage() {
   });
   const updateProfile = api.user.updateUser.useMutation();
 
-  const handleSave = (e: ChangeEvent<HTMLInputElement>) => {
+  function handleSave(e: React.MouseEvent<HTMLFormElement, MouseEvent>) {
     e.preventDefault();
-    updateProfile.mutate({
-      name: userName || "",
-    });
+    if (userName !== "" && userName !== null) {
+      updateProfile.mutate({
+        name: userName,
+      });
+    }
     becomeBarber.mutate({
       id: data?.user.id || "",
     });
-  };
+  }
 
   return (
     <div>
@@ -104,7 +107,7 @@ export default function SettingsPage() {
                         <div>
                           <Menu.Button className="flex rounded-full text-sm text-white focus:bg-sky-900 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-sky-900">
                             <span className="sr-only">Open user menu</span>
-                            <div className="h-8 w-8 rounded-full">
+                            <div className="relative h-8 w-8 rounded-full">
                               <Image
                                 className="rounded-full"
                                 src={data?.user.image || ""}
@@ -152,7 +155,7 @@ export default function SettingsPage() {
                 <div className="border-t border-sky-800 pt-4 pb-3">
                   <div className="flex items-center px-4">
                     <div className="flex-shrink-0">
-                      <div className="h-10 w-10 rounded-full">
+                      <div className="relative h-10 w-10 rounded-full">
                         <Image
                           fill={true}
                           src={data?.user.image || ""}
@@ -271,7 +274,6 @@ export default function SettingsPage() {
                   ))}
                 </nav>
               </aside>
-
               <form
                 className="divide-y divide-gray-200 lg:col-span-9"
                 action="#"
@@ -325,7 +327,7 @@ export default function SettingsPage() {
                             className="inline-block h-12 w-12 flex-shrink-0 overflow-hidden rounded-full"
                             aria-hidden="true"
                           >
-                            <div className="h-full w-full rounded-full">
+                            <div className="relative  h-full w-full rounded-full">
                               <Image
                                 fill={true}
                                 src={data?.user.image || ""}
@@ -414,7 +416,7 @@ export default function SettingsPage() {
                         </div>
                         <Switch
                           checked={availableToSwitch}
-                          onChange={setAvailableToSwitch}
+                          onChange={() => setAvailableToSwitch(isBarber)}
                           disabled={isBarber}
                           className={classNames(
                             availableToSwitch ? "bg-teal-500" : "bg-gray-200",

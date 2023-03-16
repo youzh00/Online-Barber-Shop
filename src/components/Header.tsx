@@ -18,7 +18,7 @@ const navigation = [
 
 const userNavigation = [
   { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
+  { name: "Settings", href: "settings" },
 ];
 const Header = ({ transparent = false }: { transparent?: boolean }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
