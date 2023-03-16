@@ -1,4 +1,3 @@
-import { ChangeEvent, Fragment, useEffect, useState } from "react";
 import { Disclosure, Menu, Switch, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -7,12 +6,18 @@ import {
   UserCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import Image from "next/image";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { Fragment, useEffect, useState } from "react";
 import { api } from "../../utils/api";
 
 const subNavigation = [
-  { name: "Profile", href: "#", icon: UserCircleIcon, current: true },
+  {
+    name: "Profile",
+    href: "settings/profile",
+    icon: UserCircleIcon,
+    current: true,
+  },
   { name: "Account", href: "#", icon: CogIcon, current: false },
   { name: "Password", href: "#", icon: KeyIcon, current: false },
 ];
