@@ -9,7 +9,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import { api } from "../utils/api";
+import { api } from "../../utils/api";
 
 const subNavigation = [
   { name: "Profile", href: "#", icon: UserCircleIcon, current: true },
