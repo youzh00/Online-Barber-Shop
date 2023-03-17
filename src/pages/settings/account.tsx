@@ -16,10 +16,11 @@ import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import { api } from "../../utils/api";
 import Link from "next/link";
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { redirect } from "next/dist/server/api-utils";
 import Signin from "../signin";
+import { log } from "console";
 const subNavigation = [
   {
     name: "Profile",
@@ -50,6 +51,19 @@ export default function SettingsPage() {
   const deleteAccount = api.user.deleteUser.useMutation();
   const [open, setOpen] = useState(false);
   const cancelButtonRef = useRef(null);
+  const [name, setName] = useState("");
+  const [confirmation, setConfirmation] = useState(true);
+
+  console.log(name == "I want to delete my account");
+  console.log(confirmation);
+
+  useEffect(() => {
+    if (name == " I want to delete my account") {
+      setConfirmation(false);
+    } else {
+      setConfirmation(true);
+    }
+  }, [name, confirmation]);
 
   function handleSubmit() {
     deleteAccount.mutate();
@@ -360,6 +374,25 @@ export default function SettingsPage() {
                           your data will be permanently removed from our servers
                           forever. This action cannot be undone.
                         </p>
+                        <div>
+                          <label
+                            htmlFor="name"
+                            className=" text-sm  text-gray-500"
+                          >
+                            <b>To verify, type</b> I want to delete my account{" "}
+                            <b>below</b>
+                          </label>
+                          <div className="mt-1">
+                            <input
+                              type="text"
+                              name="name"
+                              id="name"
+                              onChange={(e) => setName(e.target.value)}
+                              value={name}
+                              className="block w-full rounded-md border-gray-300 px-4 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -367,7 +400,8 @@ export default function SettingsPage() {
                     <form action="" onSubmit={handleSubmit}>
                       <button
                         type="submit"
-                        className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+                        disabled={confirmation}
+                        className="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:bg-red-300 disabled:hover:cursor-not-allowed sm:ml-3 sm:w-auto sm:text-sm"
                       >
                         Delete
                       </button>
