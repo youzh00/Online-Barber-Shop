@@ -112,8 +112,8 @@ export default function HomeSection() {
                         name="search-service"
                         id="search-service"
                         onClick={() => setOpenServices(true)}
-                        className="relative block h-12 w-full cursor-pointer rounded-none rounded-l-md border-gray-300 pl-8 placeholder:text-base placeholder:text-gray-400 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        placeholder="Service"
+                        className="relative block h-12 w-full cursor-pointer rounded-none rounded-l-md border-gray-300 pl-8 placeholder:text-sm placeholder:text-gray-400 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        placeholder="Book your services..."
                       />
                     </div>
                     <div className="relative w-1/2 min-w-0 flex-grow">
@@ -132,7 +132,7 @@ export default function HomeSection() {
                         name="search-location"
                         id="search-location"
                         onClick={() => setOpenLocation(true)}
-                        className="relative block h-12 w-full cursor-pointer rounded-none rounded-r-md border-gray-300 pl-8 placeholder:text-base placeholder:text-gray-400 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="relative block h-12 w-full cursor-pointer rounded-none rounded-r-md border-gray-300 pl-8 placeholder:text-sm placeholder:text-gray-400 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         placeholder="Location"
                       />
                     </div>
