@@ -58,7 +58,7 @@ export default function SettingsPage() {
   console.log(confirmation);
 
   useEffect(() => {
-    if (name == " I want to delete my account") {
+    if (name == "I want to delete my account") {
       setConfirmation(false);
     } else {
       setConfirmation(true);
