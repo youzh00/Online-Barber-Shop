@@ -14,6 +14,9 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { api } from "../../utils/api";
 import Link from "next/link";
 import cities from "../../assets/cities.json";
+import { useLoadScript } from "@react-google-maps/api";
+import Map from "../../components/Map";
+import { env } from "../../env.mjs";
 // ----------------------------------------------------------------
 
 const subNavigation = [
@@ -51,6 +54,11 @@ export default function SettingsPage() {
       : cities.filter((city) => {
           return city.toLowerCase().includes(query.toLowerCase());
         });
+
+  //   const { isLoaded } = useLoadScript({
+  //     googleMapsApiKey: env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+  //   });
+
   return (
     <div>
       <Disclosure
@@ -276,6 +284,10 @@ export default function SettingsPage() {
                       <h3 className="text-lg font-medium leading-6 text-gray-900">
                         Shop Information
                       </h3>
+                    </div>
+                    <div>
+                      <h3>mappp</h3>
+                      <Map />
                     </div>
                     <div className="space-y-6 sm:space-y-5">
                       <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
