@@ -61,7 +61,9 @@ enum ROLE {
 model Shop {
     id          String    @id @default(cuid())
     name        String
-    address     String
+    city        String
+    street      String
+    zipcode     String
     type        GENDER    @default(MALE)
     phone       String
     email       String
