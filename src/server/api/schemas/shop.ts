@@ -1,7 +1,9 @@
 import { z } from "zod";
 export const shopSchema = z.object({
   name: z.string(),
-  address: z.string(),
+  city: z.string(),
+  street: z.string(),
+  zipcode: z.string(),
   type: z.enum(["FEMALE", "MALE", "BOTH"]),
   phone: z.string(),
   email: z.string(),
@@ -17,7 +19,9 @@ export const shopSchema = z.object({
 export const shopSchemaUpdate = z.object({
   shopId: z.string().optional(),
   name: z.string().optional(),
-  address: z.string().optional(),
+  city: z.string().optional(),
+  street: z.string().optional(),
+  zipcode: z.string().optional(),
   type: z.enum(["FEMALE", "MALE", "BOTH"]).optional(),
   phone: z.string().optional(),
   email: z.string().optional(),
