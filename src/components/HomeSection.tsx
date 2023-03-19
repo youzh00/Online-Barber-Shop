@@ -52,7 +52,8 @@ const error: PositionErrorCallback = (error) => {
 export default function HomeSection() {
   const [openServices, setOpenServices] = useState(false);
   const [openLocation, setOpenLocation] = useState(false);
-  const [search, setSearch] = useState("");
+  const [searchLocation, setSearchLocation] = useState("");
+  const [searchServices, setSearchServices] = useState("");
   const [data1, setData] = useState(false);
 
   const { data, mutate } = api.service.searchServices.useMutation();
@@ -72,13 +73,13 @@ export default function HomeSection() {
   };
 
   useEffect(() => {
-    if (search) {
+    if (searchServices) {
       const timer = setTimeout(() => {
-        mutate({ query: search });
-      }, 500);
+        mutate({ query: searchServices });
+      }, 300);
       return () => clearTimeout(timer);
     }
-  }, [search, mutate]);
+  }, [searchServices, mutate]);
 
   return (
     <>
@@ -149,7 +150,7 @@ export default function HomeSection() {
           className="relative z-20"
           onClose={() => {
             setOpenServices(false);
-            setSearch("");
+            setSearchServices("");
           }}
         >
           <Transition.Child
@@ -182,8 +183,8 @@ export default function HomeSection() {
                         <input
                           type="text"
                           name="search-service"
-                          value={search}
-                          onChange={(e) => setSearch(e.target.value)}
+                          value={searchServices}
+                          onChange={(e) => setSearchServices(e.target.value)}
                           id="search-service"
                           className="relative block h-12 w-full rounded-none rounded-t-md border-gray-300 py-7 pl-16 placeholder:text-sm placeholder:text-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           placeholder="What are you looking for?"
@@ -255,7 +256,7 @@ export default function HomeSection() {
           className="relative z-20"
           onClose={() => {
             setOpenLocation(false);
-            setSearch("");
+            setSearchServices("");
           }}
         >
           <Transition.Child
@@ -288,8 +289,8 @@ export default function HomeSection() {
                         <input
                           type="text"
                           name="search-service"
-                          value={search}
-                          onChange={(e) => setSearch(e.target.value)}
+                          value={searchServices}
+                          onChange={(e) => setSearchServices(e.target.value)}
                           id="search-service"
                           className="relative block h-12 w-full rounded-none rounded-t-md border-gray-300 py-7 pl-16 placeholder:text-sm placeholder:text-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           placeholder="Where?"

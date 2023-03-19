@@ -31,6 +31,7 @@ const server = z.object({
  */
 const client = z.object({
   NEXT_PUBLIC_MAP_KEY: z.string().min(1),
+  NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: z.string().min(1),
   // NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
 });
 
@@ -47,6 +48,7 @@ const processEnv = {
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   NEXT_PUBLIC_MAP_KEY: process.env.NEXT_PUBLIC_MAP_KEY,
+  NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
 };
 
 // Don't touch the part below

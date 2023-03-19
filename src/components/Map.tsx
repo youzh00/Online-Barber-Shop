@@ -1,4 +1,7 @@
-import { useMemo } from "react";
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+import { useCallback, useMemo, useState } from "react";
 import {
   GoogleMap,
   useLoadScript,
@@ -43,17 +46,17 @@ function MyComponent() {
     googleMapsApiKey: env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
 
-  const [map, setMap] = React.useState(null);
+  const [map, setMap] = useState<google.maps.Map | null>(null);
 
-  const onLoad = React.useCallback(function callback(map) {
+  const onLoad = useCallback(function callback(gmap: google.maps.Map) {
     // This is just an example of getting and using the map instance!!! don't just blindly copy!
-    const bounds = new window.google.maps.LatLngBounds(center);
-    map.fitBounds(bounds);
+    const bounds = new google.maps.LatLngBounds(center);
+    gmap.fitBounds(bounds);
 
-    setMap(map);
+    setMap(gmap);
   }, []);
 
-  const onUnmount = React.useCallback(function callback(map) {
+  const onUnmount = useCallback(function callback() {
     setMap(null);
   }, []);
 

@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { distance } from "../../../utils/closest";
 import { shopSchema, shopSchemaUpdate } from "../schemas/shop";
 import {
   barberProcedure,
@@ -20,6 +21,49 @@ export const shopRouter = createTRPCRouter({
         },
       });
       return shop;
+    }),
+
+  findShop: protectedProcedure
+    .input(
+      z.object({
+        name: z.string().optional(),
+        location: z
+          .object({
+            lng: z.number(),
+            lat: z.number(),
+            city: z.string(),
+          })
+          .optional(),
+      })
+    )
+    .mutation(({ input, ctx }) => {
+      let shops = ctx.prisma.shop.findMany({
+        where: {
+          name: {
+            contains: input.name,
+          },
+        },
+      });
+
+      if (input.location) {
+        shops = ctx.prisma.shop.findMany({
+          where: {
+            name: {
+              contains: input.name,
+            },
+
+            // city: input.location.city,
+          },
+        });
+      }
+      //   const shopsWithDistance = (await shops).sort(
+      //     (a, b) =>
+      //       distance({lat:a.lat,lng:a.lng},{lat:input.lat, lng:input.lng})) -
+      //       distance(b.lat, b.lng, input?.location.lat, input?.location.lng)
+      //   );
+      // }
+
+      // return shops;
     }),
   updateShop: barberProcedure
     .input(shopSchemaUpdate)
