@@ -18,6 +18,15 @@ export const haircutRouter = createTRPCRouter({
       });
       return haircut;
     }),
+  getHaircutsByShopId: barberProcedure
+    .input(z.object({ shopId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const haircuts = await ctx.prisma.haircut.findMany({
+        where: { shopId: input.shopId },
+      });
+      return haircuts;
+    }),
+
   getHaircutById: barberProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
