@@ -1,7 +1,6 @@
 import { Disclosure, Menu, Transition, Dialog } from "@headlessui/react";
 import {
   Bars3Icon,
-  ExclamationTriangleIcon,
   XMarkIcon,
   PlusIcon,
   BuildingStorefrontIcon,
@@ -14,9 +13,10 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { api } from "../../utils/api";
 import Link from "next/link";
 import cities from "../../assets/cities.json";
-import { useLoadScript } from "@react-google-maps/api";
-// import Map from "../../components/Map";
+import Map from "../../components/Map";
 import { env } from "../../env.mjs";
+import React from "react";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 // ----------------------------------------------------------------
 
 const subNavigation = [
@@ -47,6 +47,11 @@ enum SHOPTYPE {
   MALE = "MALE",
   BOTH = "BOTH",
 }
+const containerStyle = {
+  width: "450px",
+  height: "450px",
+};
+
 export default function SettingsPage() {
   const { data } = useSession();
   const { data: createData, mutate } = api.shop.createShop.useMutation();
@@ -57,14 +62,19 @@ export default function SettingsPage() {
   const [email, setEmail] = useState("");
   const [description, setDescription] = useState("");
   const [image, setImage] = useState("");
-  const [lat, setLat] = useState("");
-  const [long, setLong] = useState("");
+
   const [street, setStreet] = useState("");
   const [openingHours, setOpeningHours] = useState("");
   const [closingHours, setClosingHours] = useState("");
 
+  const [lat, setLat] = useState(31.632036898637434);
+  const [lng, setLng] = useState(-7.983678820018496);
+  const center = { lat, lng };
+  console.log(lat, lng);
   const [query, setQuery] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
+
+  const [open, setOpen] = useState(false);
 
   console.log(selectedCity);
   const filteredPeople =
@@ -75,6 +85,11 @@ export default function SettingsPage() {
         });
   console.log(closingHours);
 
+  function handleClick(e: google.maps.MapMouseEvent) {
+    setLat(Number(e.latLng.lat()));
+    setLng(Number(e.latLng.lng()));
+  }
+
   function handleCreate(e: React.MouseEvent<HTMLFormElement, MouseEvent>) {
     e.preventDefault();
     mutate({
@@ -83,7 +98,7 @@ export default function SettingsPage() {
       description,
       email,
       lat: Number(lat),
-      lng: Number(long),
+      lng: Number(lng),
       opening: openingHours,
       phone,
       city: selectedCity,
@@ -325,10 +340,6 @@ export default function SettingsPage() {
                         Shop Information
                       </h3>
                     </div>
-                    {/* <div>
-                      <h3>mappp</h3>
-                      <Map />
-                    </div> */}
                     <div className="space-y-6 sm:space-y-5">
                       <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                         <label
@@ -572,53 +583,81 @@ export default function SettingsPage() {
                         </div>
                       </div>
 
-                      <div className=" sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
-                        <div>
-                          <h3 className="text-sm font-medium leading-6 text-gray-900">
-                            Get the Latitude and Longitude of your shop from
-                            Google Maps by right-clicking on the place or area
-                            on the map using your mouse.
-                          </h3>
-                        </div>
-                        <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4  sm:pt-5">
-                          <label
-                            htmlFor="lat"
-                            className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-                          >
-                            Latitude
-                          </label>
-                          <div className="mt-1 sm:col-span-2 sm:mt-0">
-                            <input
-                              type="text"
-                              name="lat"
-                              id="lat"
-                              value={lat}
-                              onChange={(e) => setLat(e.target.value)}
-                              autoComplete="lat"
-                              className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
                       <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                         <label
                           htmlFor="long"
                           className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         >
-                          Longitude
+                          Open to choose shop location
                         </label>
-                        <div className="mt-1 sm:col-span-2 sm:mt-0">
-                          <input
-                            type="text"
-                            name="long"
-                            id="long"
-                            value={long}
-                            onChange={(e) => setLong(e.target.value)}
-                            autoComplete="long"
-                            className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
-                          />
-                        </div>
+                        <button
+                          type="button"
+                          className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
+                          onClick={() => setOpen(true)}
+                        >
+                          Open
+                        </button>
+                        <Transition.Root show={open} as={Fragment}>
+                          <Dialog
+                            as="div"
+                            className="relative z-10"
+                            onClose={setOpen}
+                          >
+                            <Transition.Child
+                              as={Fragment}
+                              enter="ease-out duration-300"
+                              enterFrom="opacity-0"
+                              enterTo="opacity-100"
+                              leave="ease-in duration-200"
+                              leaveFrom="opacity-100"
+                              leaveTo="opacity-0"
+                            >
+                              <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                            </Transition.Child>
+
+                            <div className="fixed inset-0 z-10 overflow-y-auto">
+                              <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                                <Transition.Child
+                                  as={Fragment}
+                                  enter="ease-out duration-300"
+                                  enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                                  enterTo="opacity-100 translate-y-0 sm:scale-100"
+                                  leave="ease-in duration-200"
+                                  leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                                  leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                                >
+                                  <Dialog.Panel className="relative max-h-[600px] max-w-xl transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:p-6">
+                                    <div className="mt-5 sm:mt-6 ">
+                                      <div className="m-8">
+                                        <LoadScript
+                                          googleMapsApiKey={
+                                            env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+                                          }
+                                        >
+                                          <GoogleMap
+                                            mapContainerStyle={containerStyle}
+                                            center={center}
+                                            zoom={10}
+                                            onClick={handleClick}
+                                          >
+                                            <Marker position={center} />
+                                          </GoogleMap>
+                                        </LoadScript>
+                                      </div>
+                                      <button
+                                        type="button"
+                                        className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
+                                        onClick={() => setOpen(false)}
+                                      >
+                                        Go back
+                                      </button>
+                                    </div>
+                                  </Dialog.Panel>
+                                </Transition.Child>
+                              </div>
+                            </div>
+                          </Dialog>
+                        </Transition.Root>
                       </div>
 
                       {/* end */}
