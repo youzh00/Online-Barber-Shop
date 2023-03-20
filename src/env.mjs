@@ -32,7 +32,6 @@ const server = z.object({
 const client = z.object({
   NEXT_PUBLIC_MAP_KEY: z.string().min(1),
   NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: z.string().min(1),
-  // NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
 });
 
 /**

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -9,6 +10,16 @@ import {
   useJsApiLoader,
 } from "@react-google-maps/api";
 import React from "react";
+=======
+// import { useMemo } from "react";
+// import {
+//   GoogleMap,
+//   useLoadScript,
+//   Marker,
+//   useJsApiLoader,
+// } from "@react-google-maps/api";
+// import React from "react";
+>>>>>>> aa11ecfc41a247b03798cfd64c292c43a6427d0d
 import { env } from "../../src/env.mjs";
 
 // // function home() {
@@ -40,26 +51,43 @@ import { env } from "../../src/env.mjs";
 //   lng: -38.523,
 // };
 
-// function MyComponent() {
-//   const { isLoaded } = useJsApiLoader({
-//     id: "google-map-script",
-//     googleMapsApiKey: env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-//   });
+import React, { useState } from "react";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 
-//   const [map, setMap] = React.useState(null);
+const containerStyle = {
+  width: "400px",
+  height: "400px",
+};
 
-//   const onLoad = React.useCallback(function callback(map) {
-//     // This is just an example of getting and using the map instance!!! don't just blindly copy!
-//     const bounds = new window.google.maps.LatLngBounds(center);
-//     map.fitBounds(bounds);
+type PropsType = {
+  lat: number;
+  lng: number;
+};
+function Map(props: PropsType) {
+  const [lat, setLat] = useState(31.632036898637434);
+  const [lng, setLng] = useState(-7.983678820018496);
 
-//     setMap(map);
-//   }, []);
+  const center = { lat, lng };
 
-//   const onUnmount = React.useCallback(function callback(map) {
-//     setMap(null);
-//   }, []);
+  function handleClick(e: google.maps.MapMouseEvent) {
+    setLat(Number(e.latLng.lat()));
+    setLng(Number(e.latLng.lng()));
+  }
+  return (
+    <LoadScript googleMapsApiKey={env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={center}
+        zoom={10}
+        onClick={handleClick}
+      >
+        <Marker position={center} />
+      </GoogleMap>
+    </LoadScript>
+  );
+}
 
+<<<<<<< HEAD
 //   return isLoaded ? (
 //     <GoogleMap
 //       mapContainerStyle={containerStyle}
@@ -127,3 +155,6 @@ function MyComponent() {
 }
 
 export default React.memo(MyComponent);
+=======
+export default React.memo(Map);
+>>>>>>> aa11ecfc41a247b03798cfd64c292c43a6427d0d
