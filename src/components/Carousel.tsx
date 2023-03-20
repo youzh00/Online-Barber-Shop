@@ -1,36 +1,42 @@
-// components/Carousel.tsx
-// import the hook and options type
 import useEmblaCarousel, { type EmblaOptionsType } from "embla-carousel-react";
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useCallback, useEffect, useState } from "react";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
-// Define the props
 type Props = PropsWithChildren & EmblaOptionsType;
 
 const Carousel = ({ children, ...options }: Props) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
+  const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
+  const [nextBtnEnabled, setNextBtnEnabled] = useState(false);
 
-  const canScrollPrev = !!emblaApi?.canScrollPrev();
-  const canScrollNext = !!emblaApi?.canScrollNext();
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setPrevBtnEnabled(emblaApi.canScrollPrev());
+    setNextBtnEnabled(emblaApi.canScrollNext());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+  }, [emblaApi, onSelect]);
 
   return (
-    <>
+    <div className="relative">
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex">{children}</div>
+        <div className="flex gap-5">{children}</div>
       </div>
       <CarouselControls
-        canScrollPrev={canScrollPrev}
-        canScrollNext={canScrollNext}
+        canScrollPrev={prevBtnEnabled}
+        canScrollNext={nextBtnEnabled}
         onPrev={() => emblaApi?.scrollPrev()}
         onNext={() => emblaApi?.scrollNext()}
       />
-    </>
+    </div>
   );
 };
 export default Carousel;
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
 
 type CarouselControlsProps = {
   canScrollPrev: boolean;
@@ -41,7 +47,7 @@ type CarouselControlsProps = {
 
 const CarouselControls = (props: CarouselControlsProps) => {
   return (
-    <div className="flex justify-end gap-2 ">
+    <div>
       <button
         onClick={() => {
           if (props.canScrollPrev) {
@@ -49,13 +55,9 @@ const CarouselControls = (props: CarouselControlsProps) => {
           }
         }}
         disabled={!props.canScrollPrev}
-        className={classNames(
-          "rounded-md px-4 py-2 text-white",
-          !props.canScrollPrev ? "bg-indigo-200" : "",
-          props.canScrollPrev ? "bg-indigo-400" : ""
-        )}
+        className="absolute left-1 top-[50%] translate-y-[-50%] rounded-full bg-white p-3 text-slate-600 shadow-xl"
       >
-        Prev
+        <ChevronLeftIcon className="h-7 w-7" aria-hidden="true" />
       </button>
       <button
         onClick={() => {
@@ -64,13 +66,9 @@ const CarouselControls = (props: CarouselControlsProps) => {
           }
         }}
         disabled={!props.canScrollNext}
-        className={classNames(
-          "rounded-md px-4 py-2 text-white",
-          !props.canScrollNext ? "bg-indigo-200" : "",
-          props.canScrollNext ? "bg-indigo-400" : ""
-        )}
+        className="absolute right-1 top-[50%] translate-y-[-50%] rounded-full bg-white p-3 text-slate-600 shadow-xl"
       >
-        Next
+        <ChevronRightIcon className="h-7 w-7" aria-hidden="true" />
       </button>
     </div>
   );

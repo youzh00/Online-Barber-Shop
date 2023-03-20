@@ -58,17 +58,21 @@ export default function HomeSection() {
 
   const { data, mutate } = api.service.searchServices.useMutation();
 
-  const [city, setCity] = useState("Unknown");
+  const [address, setAddress] = useState("Unknown");
 
   const success: PositionCallback = (position) => {
     const { latitude, longitude } = position.coords;
 
     const info = axios
-      .get(
+      .get<{ results: { city: string; address_line1: string }[] }>(
         `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&format=json&apiKey=${env.NEXT_PUBLIC_MAP_KEY}`
       )
       .then(({ data: { results } }) => {
-        setCity(results[0].city);
+        const { city, address_line1 } = results[0] as {
+          city: string;
+          address_line1: string;
+        };
+        setAddress(city + ", " + address_line1);
       });
   };
 
@@ -211,12 +215,25 @@ export default function HomeSection() {
                       <ul>
                         {data
                           ?.map((item, idx) => (
-                            <li key={idx}>
-                              <div className="flex items-center gap-3 py-2">
+                            <li
+                              key={idx}
+                              className="group hover:cursor-pointer"
+                              onClick={() => {
+                                setOpenServices(false);
+                                const element =
+                                  document.getElementById("recommended");
+                                if (element) {
+                                  element.scrollIntoView({
+                                    behavior: "smooth",
+                                  });
+                                }
+                              }}
+                            >
+                              <div className="flex items-center gap-3 py-2 group-hover:text-blue-600">
                                 <MagnifyingGlassIcon
                                   width={20}
                                   height={20}
-                                  className="text-gray-300"
+                                  className="text-gray-300 group-hover:text-blue-600"
                                 />
                                 <span>{item}</span>
                               </div>
@@ -256,7 +273,7 @@ export default function HomeSection() {
           className="relative z-20"
           onClose={() => {
             setOpenLocation(false);
-            setSearchServices("");
+            setSearchLocation("");
           }}
         >
           <Transition.Child
@@ -289,8 +306,8 @@ export default function HomeSection() {
                         <input
                           type="text"
                           name="search-service"
-                          value={searchServices}
-                          onChange={(e) => setSearchServices(e.target.value)}
+                          value={searchLocation}
+                          onChange={(e) => setSearchLocation(e.target.value)}
                           id="search-service"
                           className="relative block h-12 w-full rounded-none rounded-t-md border-gray-300 py-7 pl-16 placeholder:text-sm placeholder:text-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           placeholder="Where?"
@@ -319,9 +336,10 @@ export default function HomeSection() {
                           <span className="text-xs font-light text-gray-400">
                             Your Current Location
                           </span>
-                          <div>{city}</div>
+                          <div>{address}</div>
                         </div>
                       </div>
+
                       <button
                         type="button"
                         onClick={() => {

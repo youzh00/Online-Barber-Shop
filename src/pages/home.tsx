@@ -1,14 +1,25 @@
-import { type EmblaOptionsType } from "embla-carousel-react";
 import Image from "next/image";
 import Carousel from "../components/Carousel";
 import Header from "../components/Header";
 import HomeSection from "../components/HomeSection";
+import Shop from "../components/Shop";
 // Sort Order = (Rating x 100) + Reviews
 
 const SLIDE_COUNT = 5;
 const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
 
+const shop = {
+  title: "Boost your conversion rate",
+  href: "https://d2zdpiztbgorvt.cloudfront.net/region1/us/428252/biz_photo/baf7d40984154e29b85a7201d5d8a9-razor-touchd-biz-photo-baa5c2951bc34fec8728a8bc19482a-booksy.jpeg?size=640x427",
+  address: "Lorem, ipsum, dolor, sit amet dolor 2023, sit amet",
+  rating: 4.8,
+  reviews: 34,
+  imageUrl:
+    "https://d2zdpiztbgorvt.cloudfront.net/region1/us/428252/biz_photo/baf7d40984154e29b85a7201d5d8a9-razor-touchd-biz-photo-baa5c2951bc34fec8728a8bc19482a-booksy.jpeg?size=640x427",
+};
+
 const home = () => {
+  console.log(SLIDES);
   return (
     <div>
       <div className="relative">
@@ -37,17 +48,15 @@ const home = () => {
         <HomeSection />
       </div>
       <main>
-        <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
-          <Carousel loop>
+        <div className="mx-auto max-w-7xl bg-white py-6 sm:px-6 lg:px-8">
+          <h2 className="mb-4 text-2xl font-bold" id="recommended">
+            Recommended
+          </h2>
+          <Carousel align="start">
             {SLIDES.map((src, i) => {
               return (
-                <div className="relative h-64 flex-[0_0_25%]" key={i}>
-                  <Image
-                    src={"/image-2.jpg"}
-                    fill
-                    className="object-cover object-center"
-                    alt="alt"
-                  />
+                <div className="relative flex-[0_0_25%]" key={i}>
+                  <Shop {...shop} />
                 </div>
               );
             })}
