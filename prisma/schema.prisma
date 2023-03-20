@@ -59,19 +59,19 @@ enum ROLE {
 }
 
 model Shop {
-    id          String    @id @default(cuid())
-    name        String
-    city        String
-    street      String
-    zipcode     String
+    id   String @id @default(cuid())
+    name String
+
     type        GENDER    @default(MALE)
     phone       String
     email       String
+    city        String
+    street      String
     queue       Int       @default(0)
     pictures    String[]
     description String
-    opening     DateTime
-    closing     DateTime
+    opening     String
+    closing     String
     lat         Float
     lng         Float
     user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
