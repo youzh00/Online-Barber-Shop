@@ -15,7 +15,7 @@ import { api } from "../../utils/api";
 import Link from "next/link";
 import cities from "../../assets/cities.json";
 import { useLoadScript } from "@react-google-maps/api";
-import Map from "../../components/Map";
+// import Map from "../../components/Map";
 import { env } from "../../env.mjs";
 // ----------------------------------------------------------------
 
@@ -42,22 +42,59 @@ const userNavigation = [
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
-
+enum SHOPTYPE {
+  FEMALE = "FEMALE",
+  MALE = "MALE",
+  BOTH = "BOTH",
+}
 export default function SettingsPage() {
   const { data } = useSession();
-  const [query, setQuery] = useState("");
-  const [selectedPerson, setSelectedPerson] = useState("");
+  const { data: createData, mutate } = api.shop.createShop.useMutation();
 
+  const [name, setName] = useState("");
+  const [shopType, setShopType] = useState<SHOPTYPE>(SHOPTYPE.BOTH);
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState("");
+  const [lat, setLat] = useState("");
+  const [long, setLong] = useState("");
+  const [street, setStreet] = useState("");
+  const [openingHours, setOpeningHours] = useState("");
+  const [closingHours, setClosingHours] = useState("");
+
+  const [query, setQuery] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+
+  console.log(selectedCity);
   const filteredPeople =
     query === ""
       ? cities
       : cities.filter((city) => {
           return city.toLowerCase().includes(query.toLowerCase());
         });
+  console.log(closingHours);
 
-  //   const { isLoaded } = useLoadScript({
-  //     googleMapsApiKey: env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-  //   });
+  function handleCreate(e: React.MouseEvent<HTMLFormElement, MouseEvent>) {
+    e.preventDefault();
+    mutate({
+      name,
+      closing: closingHours,
+      description,
+      email,
+      lat: Number(lat),
+      lng: Number(long),
+      opening: openingHours,
+      phone,
+      city: selectedCity,
+      street,
+      type: shopType,
+      pictures: [
+        "https://images.unsplash.com/photo-1493612276216-ee3925520721?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80",
+      ],
+    });
+    console.log(createData);
+  }
 
   return (
     <div>
@@ -277,7 +314,10 @@ export default function SettingsPage() {
                   ))}
                 </nav>
               </aside>
-              <form className="space-y-8 divide-y divide-gray-200 p-3 lg:col-span-9">
+              <form
+                className="space-y-8 divide-y divide-gray-200 p-3 lg:col-span-9"
+                onSubmit={handleCreate}
+              >
                 <div className="space-y-8 divide-y divide-gray-200 sm:space-y-5">
                   <div className="space-y-6 pt-8 sm:space-y-5 sm:pt-10">
                     <div>
@@ -285,14 +325,14 @@ export default function SettingsPage() {
                         Shop Information
                       </h3>
                     </div>
-                    <div>
+                    {/* <div>
                       <h3>mappp</h3>
                       <Map />
-                    </div>
+                    </div> */}
                     <div className="space-y-6 sm:space-y-5">
                       <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                         <label
-                          htmlFor="first-name"
+                          htmlFor="name"
                           className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         >
                           Shop name
@@ -300,9 +340,11 @@ export default function SettingsPage() {
                         <div className="mt-1 sm:col-span-2 sm:mt-0">
                           <input
                             type="text"
-                            name="first-name"
-                            id="first-name"
-                            autoComplete="given-name"
+                            name="name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            id="name"
+                            autoComplete="name"
                             className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                           />
                         </div>
@@ -317,8 +359,8 @@ export default function SettingsPage() {
                         </label>
                         <Combobox
                           as="div"
-                          value={selectedPerson}
-                          onChange={setSelectedPerson}
+                          value={selectedCity}
+                          onChange={setSelectedCity}
                         >
                           <div className="relative mt-1">
                             <Combobox.Input
@@ -386,7 +428,7 @@ export default function SettingsPage() {
 
                       <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                         <label
-                          htmlFor="region"
+                          htmlFor="street"
                           className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         >
                           Street
@@ -394,9 +436,10 @@ export default function SettingsPage() {
                         <div className="mt-1 sm:col-span-2 sm:mt-0">
                           <input
                             type="text"
-                            name="region"
-                            id="region"
-                            autoComplete="address-level1"
+                            name="street"
+                            id="street"
+                            value={street}
+                            onChange={(e) => setStreet(e.target.value)}
                             className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                           />
                         </div>
@@ -404,21 +447,23 @@ export default function SettingsPage() {
 
                       <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                         <label
-                          htmlFor="country"
+                          htmlFor="shoptype"
                           className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         >
                           Shop Type
                         </label>
                         <div className="mt-1 sm:col-span-2 sm:mt-0">
                           <select
-                            id="country"
-                            name="country"
-                            autoComplete="country-name"
+                            id="shoptype"
+                            name="shoptype"
+                            value={shopType}
+                            // to solve
+                            onChange={(e) => setShopType(e.target.value)}
                             className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                           >
-                            <option>MALE</option>
-                            <option>FEMALE</option>
-                            <option>BOTH</option>
+                            <option>{SHOPTYPE.MALE}</option>
+                            <option>{SHOPTYPE.FEMALE}</option>
+                            <option>{SHOPTYPE.BOTH}</option>
                           </select>
                         </div>
                       </div>
@@ -435,7 +480,8 @@ export default function SettingsPage() {
                             type="text"
                             name="phone-number"
                             id="phone-number"
-                            autoComplete="phone-number"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
                             placeholder="+212 6 10 20 30 40 50"
                             className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                           />
@@ -454,7 +500,8 @@ export default function SettingsPage() {
                             type="text"
                             name="email"
                             id="email"
-                            autoComplete="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             placeholder="example@example.com"
                             className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                           />
@@ -473,6 +520,8 @@ export default function SettingsPage() {
                             id="description"
                             name="description"
                             rows={3}
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
                             className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                             defaultValue={""}
                           />
@@ -494,6 +543,8 @@ export default function SettingsPage() {
                             type="time"
                             name="opening"
                             id="opening"
+                            value={openingHours}
+                            onChange={(e) => setOpeningHours(e.target.value)}
                             autoComplete="opening"
                             className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                           />
@@ -512,29 +563,65 @@ export default function SettingsPage() {
                             type="time"
                             name="closing"
                             id="closing"
+                            required={true}
+                            value={closingHours}
+                            onChange={(e) => setClosingHours(e.target.value)}
                             autoComplete="closing"
                             className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                           />
                         </div>
                       </div>
 
+                      <div className=" sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
+                        <div>
+                          <h3 className="text-sm font-medium leading-6 text-gray-900">
+                            Get the Latitude and Longitude of your shop from
+                            Google Maps by right-clicking on the place or area
+                            on the map using your mouse.
+                          </h3>
+                        </div>
+                        <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4  sm:pt-5">
+                          <label
+                            htmlFor="lat"
+                            className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
+                          >
+                            Latitude
+                          </label>
+                          <div className="mt-1 sm:col-span-2 sm:mt-0">
+                            <input
+                              type="text"
+                              name="lat"
+                              id="lat"
+                              value={lat}
+                              onChange={(e) => setLat(e.target.value)}
+                              autoComplete="lat"
+                              className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
                       <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                         <label
-                          htmlFor="postal-code"
+                          htmlFor="long"
                           className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
                         >
-                          ZIP / Postal code
+                          Longitude
                         </label>
                         <div className="mt-1 sm:col-span-2 sm:mt-0">
                           <input
                             type="text"
-                            name="postal-code"
-                            id="postal-code"
-                            autoComplete="postal-code"
+                            name="long"
+                            id="long"
+                            value={long}
+                            onChange={(e) => setLong(e.target.value)}
+                            autoComplete="long"
                             className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                           />
                         </div>
                       </div>
+
+                      {/* end */}
                     </div>
                   </div>
                 </div>
@@ -551,7 +638,7 @@ export default function SettingsPage() {
                       type="submit"
                       className="ml-3 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
-                      Save
+                      Create
                     </button>
                   </div>
                 </div>

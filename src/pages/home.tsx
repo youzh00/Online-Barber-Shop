@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Carousel from "../components/Carousel";
 import Header from "../components/Header";
 import HomeSection from "../components/HomeSection";
 import Shop from "../components/Shop";
+import { api } from "../utils/api";
 // Sort Order = (Rating x 100) + Reviews
 
 const SLIDE_COUNT = 5;
@@ -19,7 +19,8 @@ const shop = {
 };
 
 const home = () => {
-  console.log(SLIDES);
+  const { data: shops } = api.shop.findShop.useMutation();
+
   return (
     <div>
       <div className="relative">
@@ -49,18 +50,24 @@ const home = () => {
       </div>
       <main>
         <div className="mx-auto max-w-7xl bg-white py-6 sm:px-6 lg:px-8">
-          <h2 className="mb-4 text-2xl font-bold" id="recommended">
-            Recommended
-          </h2>
-          <Carousel align="start">
-            {SLIDES.map((src, i) => {
-              return (
-                <div className="relative flex-[0_0_25%]" key={i}>
-                  <Shop {...shop} />
-                </div>
-              );
-            })}
-          </Carousel>
+          {shops ? (
+            "shops hh"
+          ) : (
+            <section>
+              <h2 className="mb-4 text-2xl font-bold" id="recommended">
+                Recommended
+              </h2>
+              <Carousel align="start">
+                {SLIDES.map((src, i) => {
+                  return (
+                    <div className="relative flex-[0_0_25%]" key={i}>
+                      <Shop {...shop} />
+                    </div>
+                  );
+                })}
+              </Carousel>
+            </section>
+          )}
         </div>
       </main>
     </div>

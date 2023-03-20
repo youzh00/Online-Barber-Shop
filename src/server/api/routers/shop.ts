@@ -2,12 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { distance } from "../../../utils/closest";
 import { shopSchema, shopSchemaUpdate } from "../schemas/shop";
-import {
-  barberProcedure,
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "../trpc";
+import { barberProcedure, createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const shopRouter = createTRPCRouter({
   createShop: barberProcedure
@@ -36,7 +31,10 @@ export const shopRouter = createTRPCRouter({
           .optional(),
       })
     )
-    .mutation(({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
+      const lat = input.location?.lat || 33.9716;
+      const lng = input.location?.lng || -6.8498;
+
       let shops = ctx.prisma.shop.findMany({
         where: {
           name: {
@@ -48,22 +46,17 @@ export const shopRouter = createTRPCRouter({
       if (input.location) {
         shops = ctx.prisma.shop.findMany({
           where: {
-            name: {
-              contains: input.name,
-            },
-
-            // city: input.location.city,
+            city: input.location.city,
           },
         });
       }
-      //   const shopsWithDistance = (await shops).sort(
-      //     (a, b) =>
-      //       distance({lat:a.lat,lng:a.lng},{lat:input.lat, lng:input.lng})) -
-      //       distance(b.lat, b.lng, input?.location.lat, input?.location.lng)
-      //   );
-      // }
+      const shopsWithDistance = (await shops).sort(
+        (a, b) =>
+          distance({ lat: a.lat, lng: a.lng }, { lat, lng }) -
+          distance({ lat: b.lat, lng: b.lng }, { lat, lng })
+      );
 
-      // return shops;
+      return shopsWithDistance;
     }),
   updateShop: barberProcedure
     .input(shopSchemaUpdate)
