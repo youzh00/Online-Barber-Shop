@@ -20,17 +20,14 @@ import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { fill } from "@cloudinary/url-gen/actions/resize";
 import { CloudinaryImage } from "@cloudinary/url-gen";
 import cloudinary from "cloudinary";
-import { log } from "console";
-import fs from "fs";
-import { buffer } from "buffer";
 
 // ----------------------------------------------------------------
 
-cloudinary.v2.config({
-  cloud_name: env.CLOUD_NAME,
-  api_key: env.CLOUD_API_KEY,
-  api_secret: env.CLOUD_API_SECRET,
-});
+// cloudinary.v2.config({
+//   cloud_name: env.CLOUD_NAME,
+//   api_key: env.CLOUD_API_KEY,
+//   api_secret: env.CLOUD_API_SECRET,
+// });
 
 const subNavigation = [
   {

@@ -102,6 +102,26 @@ export const shopRouter = createTRPCRouter({
       });
       return shop;
     }),
+  incrementQueue: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const exist = await ctx.prisma.shop.findUnique({
+        where: { id: input.id },
+      });
+      if (!exist) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Shop does not exist",
+        });
+      }
+      const shop = await ctx.prisma.shop.update({
+        where: { id: input.id },
+        data: {
+          queue: exist.queue + 1,
+        },
+      });
+      return shop;
+    }),
   getShopById: barberProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
