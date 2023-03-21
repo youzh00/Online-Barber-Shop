@@ -2,13 +2,19 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { distance } from "../../../utils/closest";
 import { shopSchema, shopSchemaUpdate } from "../schemas/shop";
-import { barberProcedure, createTRPCRouter, protectedProcedure } from "../trpc";
+import {
+  barberProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "../trpc";
 
 export const shopRouter = createTRPCRouter({
   createShop: barberProcedure
     .input(shopSchema)
     .mutation(async ({ input, ctx }) => {
       const user = ctx.session.user;
+
       const shop = await ctx.prisma.shop.create({
         data: {
           ...input,

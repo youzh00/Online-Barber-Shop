@@ -22,6 +22,9 @@ const server = z.object({
   // Add `.min(1) on ID and SECRET if you want to make sure they're not empty
   GOOGLE_CLIENT_ID: z.string().min(1),
   GOOGLE_CLIENT_SECRET: z.string().min(1),
+  CLOUD_NAME: z.string().min(1),
+  CLOUD_API_KEY: z.string().min(1),
+  CLOUD_API_SECRET: z.string().min(1),
 });
 
 /**
@@ -31,7 +34,8 @@ const server = z.object({
  */
 const client = z.object({
   NEXT_PUBLIC_MAP_KEY: z.string().min(1),
-  NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: z.string().min(1),
+  // NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: z.string().min(1),
+  // NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
 });
 
 /**
@@ -47,7 +51,7 @@ const processEnv = {
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   NEXT_PUBLIC_MAP_KEY: process.env.NEXT_PUBLIC_MAP_KEY,
-  NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+  // NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
 };
 
 // Don't touch the part below
