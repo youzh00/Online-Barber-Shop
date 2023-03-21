@@ -1,11 +1,9 @@
-import { ShoppingBagIcon } from "@heroicons/react/24/outline";
 import { Shop } from "@prisma/client";
 import Carousel from "../components/Carousel";
 import Header from "../components/Header";
 import HomeSection from "../components/HomeSection";
 import ShopC from "../components/Shop";
 import ShopsList from "../components/ShopsList";
-import { api } from "../utils/api";
 // Sort Order = (Rating x 100) + Reviews
 
 const SLIDE_COUNT = 5;

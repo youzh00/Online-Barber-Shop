@@ -16,6 +16,7 @@ export const shopRouter = createTRPCRouter({
     .input(shopSchema)
     .mutation(async ({ input, ctx }) => {
       const user = ctx.session.user;
+      console.log(user);
 
       const shop = await ctx.prisma.shop.create({
         data: {

@@ -13,29 +13,15 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import cloudinary from "cloudinary";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import React, { Fragment, useState } from "react";
+import { Fragment, useState } from "react";
 import cities from "../../assets/cities.json";
 import { env } from "../../env.mjs";
-import React from "react";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import { fill } from "@cloudinary/url-gen/actions/resize";
-import { CloudinaryImage } from "@cloudinary/url-gen";
-import cloudinary from "cloudinary";
-import { log } from "console";
-import fs from "fs";
-import { buffer } from "buffer";
+import { api } from "../../utils/api";
 
 // ----------------------------------------------------------------
-
-cloudinary.v2.config({
-  cloud_name: env.CLOUD_NAME,
-  api_key: env.CLOUD_API_KEY,
-  api_secret: env.CLOUD_API_SECRET,
-});
 
 const subNavigation = [
   {
@@ -104,8 +90,8 @@ export default function SettingsPage() {
   const filteredPeople =
     query === ""
       ? cities
-      : cities.filter((city) => {
-          return (city as string).toLowerCase().includes(query.toLowerCase());
+      : cities.filter(({ city }) => {
+          return city.toLowerCase().includes(query.toLowerCase());
         });
 
   function handleClick(e: google.maps.MapMouseEvent) {
@@ -433,8 +419,8 @@ export default function SettingsPage() {
                               <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                                 {filteredPeople.map((city) => (
                                   <Combobox.Option
-                                    key={city}
-                                    value={city}
+                                    key={city.city}
+                                    value={city.city}
                                     className={({ active }) =>
                                       classNames(
                                         "relative cursor-default select-none py-2 pl-3 pr-9",
@@ -452,7 +438,7 @@ export default function SettingsPage() {
                                             selected && "font-semibold"
                                           )}
                                         >
-                                          {city}
+                                          {city.city}
                                         </span>
 
                                         {selected && (

@@ -1,5 +1,10 @@
 import useEmblaCarousel, { type EmblaOptionsType } from "embla-carousel-react";
-import { PropsWithChildren, useCallback, useEffect, useState } from "react";
+import {
+  type PropsWithChildren,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
 type Props = PropsWithChildren & EmblaOptionsType;
