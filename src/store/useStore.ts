@@ -9,7 +9,7 @@ interface GlobalState {
 
 const useStore = create<GlobalState>()((set) => ({
   location: {
-    city: "Rabat",
+    city: "",
     lat: 33.9716,
     lng: -6.8498,
   },

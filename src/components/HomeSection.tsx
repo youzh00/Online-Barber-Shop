@@ -46,6 +46,8 @@ export default function HomeSection() {
 
   const service = useStore((state) => state.service);
   const setService = useStore((state) => state.setService);
+  const location = useStore((state) => state.location);
+  const setLocation = useStore((state) => state.setLocation);
 
   const { data: servicesData, mutate: mutateServices } =
     api.service.searchServices.useMutation();
@@ -80,6 +82,12 @@ export default function HomeSection() {
         };
         setAddress(city + ", " + address_line1);
         setOpenLocation(false);
+        setLocation({
+          city,
+          lat,
+          lng: lon,
+        });
+
         mutateShops({
           location: {
             city,
@@ -167,6 +175,7 @@ export default function HomeSection() {
                         type="text"
                         name="search-location"
                         id="search-location"
+                        value={location.city}
                         readOnly
                         onClick={() => setOpenLocation(true)}
                         className="relative block h-12 w-full cursor-pointer rounded-none rounded-r-md border-gray-300 pl-8 placeholder:text-sm placeholder:text-gray-400 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -427,9 +436,11 @@ export default function HomeSection() {
                               className="group hover:cursor-pointer"
                               onClick={() => {
                                 setOpenLocation(false);
+                                setLocation(item);
                                 mutateShops({
                                   location: item,
                                 });
+
                                 const element =
                                   document.getElementById("recommended");
                                 if (element) {
@@ -463,6 +474,7 @@ export default function HomeSection() {
                             <button
                               onClick={() => {
                                 setOpenLocation(false);
+                                setLocation(item);
                                 mutateShops({
                                   location: item,
                                 });

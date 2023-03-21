@@ -99,15 +99,16 @@ model Rating {
 }
 
 model Haircut {
-    id          String   @id @default(cuid())
-    name        String
-    description String
-    picture     String
-    price       Int
-    Shop        Shop     @relation(fields: [shopId], references: [id])
-    shopId      String
-    Order       Order[]
-    createdAt   DateTime @default(now())
+    id            String   @id @default(cuid())
+    name          String
+    description   String
+    picture       String
+    estimatedTime Int
+    price         Int
+    Shop          Shop     @relation(fields: [shopId], references: [id])
+    shopId        String
+    Order         Order[]
+    createdAt     DateTime @default(now())
 }
 
 model Order {

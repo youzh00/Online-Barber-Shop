@@ -9,6 +9,8 @@ import {
   publicProcedure,
 } from "../trpc";
 
+import cloudinary from "../../../utils/cloudinary";
+
 export const shopRouter = createTRPCRouter({
   createShop: barberProcedure
     .input(shopSchema)

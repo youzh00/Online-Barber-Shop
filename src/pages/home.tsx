@@ -1,7 +1,10 @@
+import { ShoppingBagIcon } from "@heroicons/react/24/outline";
+import { Shop } from "@prisma/client";
 import Carousel from "../components/Carousel";
 import Header from "../components/Header";
 import HomeSection from "../components/HomeSection";
-import Shop from "../components/Shop";
+import ShopC from "../components/Shop";
+import ShopsList from "../components/ShopsList";
 import { api } from "../utils/api";
 // Sort Order = (Rating x 100) + Reviews
 
@@ -18,8 +21,51 @@ const shop = {
     "https://d2zdpiztbgorvt.cloudfront.net/region1/us/428252/biz_photo/baf7d40984154e29b85a7201d5d8a9-razor-touchd-biz-photo-baa5c2951bc34fec8728a8bc19482a-booksy.jpeg?size=640x427",
 };
 
+const shops: Shop[] = [
+  {
+    id: "sdf56456sdf56sdf56sdf",
+    name: "7ella9 ra7ma",
+    type: "MALE",
+    phone: "+212 659451325",
+    email: "ra7ma@gmail.com",
+    city: "Rabat",
+    street: "Rue 7ella9",
+    queue: 0,
+    pictures: [
+      "https://d2zdpiztbgorvt.cloudfront.net/region1/us/428252/biz_photo/baf7d40984154e29b85a7201d5d8a9-razor-touchd-biz-photo-baa5c2951bc34fec8728a8bc19482a-booksy.jpeg?size=640x427",
+    ],
+    description: "7ella9 ra7ma m9wd ft7assen",
+    opening: "09:00",
+    closing: "21:00",
+    lat: 34.012345,
+    lng: -6.012345,
+    userId: "5qsdf6456qsf56qsdf23qsdf748qsdf",
+    createdAt: new Date(),
+  },
+  {
+    id: "sdf56456sdf56sdf56sdf",
+    name: "7ella9 ra7ma",
+    type: "MALE",
+    phone: "+212 659451325",
+    email: "ra7ma@gmail.com",
+    city: "Rabat",
+    street: "Rue 7ella9",
+    queue: 0,
+    pictures: [
+      "https://d2zdpiztbgorvt.cloudfront.net/region1/us/428252/biz_photo/baf7d40984154e29b85a7201d5d8a9-razor-touchd-biz-photo-baa5c2951bc34fec8728a8bc19482a-booksy.jpeg?size=640x427",
+    ],
+    description: "7ella9 ra7ma m9wd ft7assen",
+    opening: "09:00",
+    closing: "21:00",
+    lat: 34.012345,
+    lng: -6.012345,
+    userId: "5qsdf6456qsf56qsdf23qsdf748qsdf",
+    createdAt: new Date(),
+  },
+];
+
 const home = () => {
-  const { data: shops } = api.shop.findShop.useMutation();
+  // const { data: shops } = api.shop.findShop.useMutation();
 
   return (
     <div>
@@ -51,7 +97,12 @@ const home = () => {
       <main>
         <div className="mx-auto max-w-7xl bg-white py-6 sm:px-6 lg:px-8">
           {shops ? (
-            "shops hh"
+            <>
+              <h2 className="mb-4 text-3xl font-bold" id="recommended">
+                Results
+              </h2>
+              <ShopsList shops={shops}></ShopsList>
+            </>
           ) : (
             <section>
               <h2 className="mb-4 text-2xl font-bold" id="recommended">
@@ -61,7 +112,7 @@ const home = () => {
                 {SLIDES.map((src, i) => {
                   return (
                     <div className="relative flex-[0_0_25%]" key={i}>
-                      <Shop {...shop} />
+                      <ShopC {...shop} />
                     </div>
                   );
                 })}

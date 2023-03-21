@@ -1,33 +1,41 @@
-import { Disclosure, Menu, Transition, Dialog } from "@headlessui/react";
+import {
+  Combobox,
+  Dialog,
+  Disclosure,
+  Menu,
+  Transition,
+} from "@headlessui/react";
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import {
   Bars3Icon,
-  XMarkIcon,
-  PlusIcon,
   BuildingStorefrontIcon,
+  PlusIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
-import { Combobox } from "@headlessui/react";
-import { useSession, signIn } from "next-auth/react";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import cloudinary from "cloudinary";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { Fragment, useEffect, useRef, useState } from "react";
-import { api } from "../../utils/api";
 import Link from "next/link";
+import React, { Fragment, useState } from "react";
 import cities from "../../assets/cities.json";
-import Map from "../../components/Map";
 import { env } from "../../env.mjs";
 import React from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { fill } from "@cloudinary/url-gen/actions/resize";
 import { CloudinaryImage } from "@cloudinary/url-gen";
 import cloudinary from "cloudinary";
+import { log } from "console";
+import fs from "fs";
+import { buffer } from "buffer";
 
 // ----------------------------------------------------------------
 
-// cloudinary.v2.config({
-//   cloud_name: env.CLOUD_NAME,
-//   api_key: env.CLOUD_API_KEY,
-//   api_secret: env.CLOUD_API_SECRET,
-// });
+cloudinary.v2.config({
+  cloud_name: env.CLOUD_NAME,
+  api_key: env.CLOUD_API_KEY,
+  api_secret: env.CLOUD_API_SECRET,
+});
 
 const subNavigation = [
   {
@@ -48,6 +56,14 @@ const userNavigation = [
   { name: "Settings", href: "#" },
   { name: "Sign out", href: "#" },
 ];
+
+const toBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -72,7 +88,7 @@ export default function SettingsPage() {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [description, setDescription] = useState("");
-  const [images, setImages] = useState<File[]>([]);
+  const [images, setImages] = useState<string[]>([]);
   const [street, setStreet] = useState("");
   const [openingHours, setOpeningHours] = useState("");
   const [closingHours, setClosingHours] = useState("");
@@ -80,20 +96,17 @@ export default function SettingsPage() {
   const [lat, setLat] = useState(31.632036898637434);
   const [lng, setLng] = useState(-7.983678820018496);
   const center = { lat, lng };
-  console.log(lat, lng);
   const [query, setQuery] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
 
   const [open, setOpen] = useState(false);
 
-  console.log(selectedCity);
   const filteredPeople =
     query === ""
       ? cities
       : cities.filter((city) => {
-          return city.toLowerCase().includes(query.toLowerCase());
+          return (city as string).toLowerCase().includes(query.toLowerCase());
         });
-  console.log(closingHours);
 
   function handleClick(e: google.maps.MapMouseEvent) {
     setLat(Number(e.latLng.lat()));
@@ -102,10 +115,21 @@ export default function SettingsPage() {
 
   function onFileChange(e: React.FormEvent<HTMLInputElement>) {
     const filesArray = Array.from(e.currentTarget.files as FileList);
-    setImages(filesArray);
-  }
 
-  console.log("this is the images", images);
+    Promise.all(filesArray.map((file) => toBase64(file)))
+      .then((base64) => {
+        return fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ images: base64 }),
+        });
+      })
+      .then((res) => res.json())
+      .then(({ imagesUrls }) => {
+        setImages(imagesUrls);
+      })
+      .catch((err) => console.log(err));
+  }
 
   function handleCreate(e: React.MouseEvent<HTMLFormElement, MouseEvent>) {
     e.preventDefault();
@@ -557,7 +581,6 @@ export default function SettingsPage() {
                             required
                             onChange={(e) => setDescription(e.target.value)}
                             className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            defaultValue={""}
                           />
                           <p className="mt-2 text-sm text-gray-500">
                             Write a few sentences about your shop.
