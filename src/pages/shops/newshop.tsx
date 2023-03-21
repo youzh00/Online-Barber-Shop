@@ -17,7 +17,20 @@ import Map from "../../components/Map";
 import { env } from "../../env.mjs";
 import React from "react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import { fill } from "@cloudinary/url-gen/actions/resize";
+import { CloudinaryImage } from "@cloudinary/url-gen";
+import cloudinary from "cloudinary";
+import { log } from "console";
+import fs from "fs";
+import { buffer } from "buffer";
+
 // ----------------------------------------------------------------
+
+cloudinary.v2.config({
+  cloud_name: env.CLOUD_NAME,
+  api_key: env.CLOUD_API_KEY,
+  api_secret: env.CLOUD_API_SECRET,
+});
 
 const subNavigation = [
   {
@@ -51,6 +64,7 @@ const containerStyle = {
   width: "450px",
   height: "450px",
 };
+//!------------------------------ Main Page --------------------------------
 
 export default function SettingsPage() {
   const { data } = useSession();
@@ -61,8 +75,7 @@ export default function SettingsPage() {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState("");
-
+  const [images, setImages] = useState<File[]>([]);
   const [street, setStreet] = useState("");
   const [openingHours, setOpeningHours] = useState("");
   const [closingHours, setClosingHours] = useState("");
@@ -90,8 +103,16 @@ export default function SettingsPage() {
     setLng(Number(e.latLng.lng()));
   }
 
+  function onFileChange(e: React.FormEvent<HTMLInputElement>) {
+    const filesArray = Array.from(e.currentTarget.files as FileList);
+    setImages(filesArray);
+  }
+
+  console.log("this is the images", images);
+
   function handleCreate(e: React.MouseEvent<HTMLFormElement, MouseEvent>) {
     e.preventDefault();
+
     mutate({
       name,
       closing: closingHours,
@@ -104,9 +125,7 @@ export default function SettingsPage() {
       city: selectedCity,
       street,
       type: shopType,
-      pictures: [
-        "https://images.unsplash.com/photo-1493612276216-ee3925520721?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80",
-      ],
+      pictures: images,
     });
     console.log(createData);
   }
@@ -341,6 +360,7 @@ export default function SettingsPage() {
                       </h3>
                     </div>
                     <div className="space-y-6 sm:space-y-5">
+                      {/* //* ------------Inputs----------------- */}
                       <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                         <label
                           htmlFor="name"
@@ -352,6 +372,7 @@ export default function SettingsPage() {
                           <input
                             type="text"
                             name="name"
+                            required
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             id="name"
@@ -378,6 +399,7 @@ export default function SettingsPage() {
                               className="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
                               onChange={(event) => setQuery(event.target.value)}
                               displayValue={(city) => city}
+                              required
                             />
                             <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
                               <ChevronUpDownIcon
@@ -449,6 +471,7 @@ export default function SettingsPage() {
                             type="text"
                             name="street"
                             id="street"
+                            required
                             value={street}
                             onChange={(e) => setStreet(e.target.value)}
                             className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
@@ -489,6 +512,7 @@ export default function SettingsPage() {
                         <div className="mt-1 sm:col-span-2 sm:mt-0">
                           <input
                             type="text"
+                            required
                             name="phone-number"
                             id="phone-number"
                             value={phone}
@@ -511,6 +535,7 @@ export default function SettingsPage() {
                             type="text"
                             name="email"
                             id="email"
+                            required
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             placeholder="example@example.com"
@@ -532,6 +557,7 @@ export default function SettingsPage() {
                             name="description"
                             rows={3}
                             value={description}
+                            required
                             onChange={(e) => setDescription(e.target.value)}
                             className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                             defaultValue={""}
@@ -554,6 +580,7 @@ export default function SettingsPage() {
                             type="time"
                             name="opening"
                             id="opening"
+                            required
                             value={openingHours}
                             onChange={(e) => setOpeningHours(e.target.value)}
                             autoComplete="opening"
@@ -573,6 +600,7 @@ export default function SettingsPage() {
                           <input
                             type="time"
                             name="closing"
+                            required
                             id="closing"
                             required={true}
                             value={closingHours}
@@ -582,6 +610,63 @@ export default function SettingsPage() {
                           />
                         </div>
                       </div>
+
+                      {/* //* ------------------ Image Upload --------------------- */}
+
+                      <div className="   sm:border-t sm:border-gray-200 sm:pt-5">
+                        <div className="shadow sm:overflow-hidden sm:rounded-md ">
+                          <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700">
+                                Shop photos
+                              </label>
+                              <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
+                                <div className="space-y-1 text-center">
+                                  <svg
+                                    className="mx-auto h-12 w-12 text-gray-400"
+                                    stroke="currentColor"
+                                    fill="none"
+                                    viewBox="0 0 48 48"
+                                    aria-hidden="true"
+                                  >
+                                    <path
+                                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                      strokeWidth={2}
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                  </svg>
+                                  <div className="flex text-sm text-gray-600">
+                                    <label
+                                      htmlFor="file-upload"
+                                      className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
+                                    >
+                                      <span>Upload a file</span>
+                                      <input
+                                        id="file-upload"
+                                        name="file-upload"
+                                        multiple={true}
+                                        type="file"
+                                        className="sr-only"
+                                        required
+                                        onChange={onFileChange}
+                                      />
+                                    </label>
+                                    <p className="pl-1">or drag and drop</p>
+                                  </div>
+                                  <p className="text-xs text-gray-500">
+                                    PNG, JPG, JPEG
+                                  </p>
+                                  <p className="text-xs text-gray-500">
+                                    Uploaded : {images.length}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {/* //* ------------------modal--------------------- */}
 
                       <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-t sm:border-gray-200 sm:pt-5">
                         <label
@@ -660,7 +745,7 @@ export default function SettingsPage() {
                         </Transition.Root>
                       </div>
 
-                      {/* end */}
+                      {/* //* -----------------------end------------------------ */}
                     </div>
                   </div>
                 </div>

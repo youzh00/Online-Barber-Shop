@@ -1,18 +1,22 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { shopSchema, shopSchemaUpdate } from "../schemas/shop";
-import {
-  barberProcedure,
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
-} from "../trpc";
+import { barberProcedure, createTRPCRouter, protectedProcedure } from "../trpc";
+import cloudinary from "cloudinary";
+import { env } from "../../../env.mjs";
+
+// cloudinary.v2.config({
+//   cloud_name: env.CLOUD_NAME,
+//   api_key: env.CLOUD_API_KEY,
+//   api_secret: env.CLOUD_API_SECRET,
+// });
 
 export const shopRouter = createTRPCRouter({
   createShop: barberProcedure
     .input(shopSchema)
     .mutation(async ({ input, ctx }) => {
       const user = ctx.session.user;
+
       const shop = await ctx.prisma.shop.create({
         data: {
           ...input,

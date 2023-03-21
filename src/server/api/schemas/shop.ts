@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { any, z } from "zod";
 export const shopSchema = z.object({
   name: z.string(),
   city: z.string(),
@@ -7,7 +7,7 @@ export const shopSchema = z.object({
   phone: z.string(),
   email: z.string(),
   queue: z.number().optional(),
-  pictures: z.array(z.string().url()),
+  pictures: z.array(any()),
   description: z.string(),
   opening: z.string(),
   closing: z.string(),
