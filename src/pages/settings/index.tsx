@@ -53,16 +53,17 @@ export default function SettingsPage() {
     setAvailableToSwitch(data?.user.role === "BARBER");
   }, [data?.user.role]);
 
-  function handleSave(e: React.MouseEvent<HTMLFormElement, MouseEvent>) {
-    // e.preventDefault();
-    if (username !== "" && username !== null) {
+  function handleSave() {
+    if (username !== data?.user.name) {
       updateProfile.mutate({
         name: username,
       });
     }
-    becomeBarber.mutate({
-      id: data?.user.id || "",
-    });
+    if (availableToSwitch && data?.user.role !== "BARBER") {
+      becomeBarber.mutate({
+        id: data?.user.id || "",
+      });
+    }
   }
 
   return (
@@ -316,7 +317,7 @@ export default function SettingsPage() {
                             type="text"
                             name="name"
                             id="name"
-                            value={username || ""}
+                            value={username}
                             className="block w-full border-0 border-b border-transparent bg-gray-50 focus:border-indigo-600 focus:ring-0 sm:text-sm"
                           />
                         </div>

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
+import allCities from "../../../assets/cities.json";
 
 const services = [
   "Haircut",
@@ -35,4 +36,15 @@ export const serviceRouter = createTRPCRouter({
         service.toLowerCase().includes(input.query.toLowerCase())
       );
     }),
+  searchCities: protectedProcedure
+    .input(
+      z.object({
+        query: z.string().min(1).max(100),
+      })
+    )
+    .mutation(({ input }) =>
+      allCities.filter(({ city }) =>
+        (city as string).toLowerCase().includes(input.query.toLowerCase())
+      )
+    ),
 });

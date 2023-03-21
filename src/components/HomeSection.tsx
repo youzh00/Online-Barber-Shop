@@ -8,19 +8,19 @@ import { Fragment, useEffect, useState } from "react";
 import { api } from "../utils/api";
 import axios from "axios";
 import { env } from "../env.mjs";
+import useStore from "../store/useStore";
 
 const cities = [
-  "Marrakesh",
-  "Fes",
-  "Casablanca",
-  "Tangier",
-  "Essaouira",
-  "Agadir",
-  "Rabat",
-  "Meknes",
-  "Ouarzazate",
-  "Errachidia",
-  "Oujda",
+  { city: "Casablanca", lat: 33.5992, lng: -7.62 },
+  { city: "Fès", lat: 34.0433, lng: -5.0033 },
+  { city: "Tangier", lat: 35.7767, lng: -5.8039 },
+  { city: "Marrakech", lat: 31.6295, lng: -7.9811 },
+  { city: "Sale", lat: 34.05, lng: -6.8167 },
+  { city: "Rabat", lat: 34.0253, lng: -6.8361 },
+  { city: "Meknès", lat: 33.8833, lng: -5.55 },
+  { city: "Kenitra", lat: 34.25, lng: -6.5833 },
+  { city: "Agadir", lat: 30.4167, lng: -9.5833 },
+  { city: "Oujda", lat: 34.69, lng: -1.91 },
 ];
 
 const services = [
@@ -34,51 +34,85 @@ const services = [
   "Beard trim and shave",
   "Beard trim and dye",
   "Beard shave and dye",
-  "Beard trim, shave and dye",
-  "Haircut and beard trim",
-  "Haircut and beard shave",
-  "Haircut and beard dye",
-  "Haircut and beard trim and shave",
-  "Haircut and beard trim and dye",
-  "Haircut and beard shave and dye",
-  "Haircut and beard trim, shave and dye",
-  "Haircut and beard shave and dye",
 ];
-
-const error: PositionErrorCallback = (error) => {
-  console.log(error);
-};
 
 export default function HomeSection() {
   const [openServices, setOpenServices] = useState(false);
   const [openLocation, setOpenLocation] = useState(false);
-  const [search, setSearch] = useState("");
-  const [data1, setData] = useState(false);
+  const [searchLocation, setSearchLocation] = useState("");
+  const [searchServices, setSearchServices] = useState("");
 
-  const { data, mutate } = api.service.searchServices.useMutation();
+  const { data: shops, mutate: mutateShops } = api.shop.findShop.useMutation();
 
-  const [city, setCity] = useState("Unknown");
+  const service = useStore((state) => state.service);
+  const setService = useStore((state) => state.setService);
 
+  const { data: servicesData, mutate: mutateServices } =
+    api.service.searchServices.useMutation();
+  const { data: citiesData, mutate: mutateCities } =
+    api.service.searchCities.useMutation();
+
+  const [address, setAddress] = useState("Unknown");
+
+  const error: PositionErrorCallback = () => {
+    setAddress("Please Allow Location Access");
+  };
   const success: PositionCallback = (position) => {
     const { latitude, longitude } = position.coords;
 
     const info = axios
-      .get(
+      .get<{
+        results: {
+          city: string;
+          address_line1: string;
+          lat: number;
+          lon: number;
+        }[];
+      }>(
         `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&format=json&apiKey=${env.NEXT_PUBLIC_MAP_KEY}`
       )
       .then(({ data: { results } }) => {
-        setCity(results[0].city);
+        const { city, address_line1, lat, lon } = results[0] as {
+          city: string;
+          address_line1: string;
+          lat: number;
+          lon: number;
+        };
+        setAddress(city + ", " + address_line1);
+        setOpenLocation(false);
+        mutateShops({
+          location: {
+            city,
+            lat,
+            lng: lon,
+          },
+        });
+        const element = document.getElementById("recommended");
+        if (element) {
+          element.scrollIntoView({
+            behavior: "smooth",
+          });
+        }
       });
   };
 
   useEffect(() => {
-    if (search) {
+    if (searchLocation) {
       const timer = setTimeout(() => {
-        mutate({ query: search });
-      }, 500);
+        mutateCities({ query: searchLocation });
+      }, 300);
       return () => clearTimeout(timer);
     }
-  }, [search, mutate]);
+  }, [searchLocation, mutateCities]);
+
+  useEffect(() => {
+    if (searchServices) {
+      const timer = setTimeout(() => {
+        mutateServices({ query: searchServices });
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [searchServices, mutateServices]);
 
   return (
     <>
@@ -111,6 +145,8 @@ export default function HomeSection() {
                         type="text"
                         name="search-service"
                         id="search-service"
+                        value={service}
+                        readOnly
                         onClick={() => setOpenServices(true)}
                         className="relative block h-12 w-full cursor-pointer rounded-none rounded-l-md border-gray-300 pl-8 placeholder:text-sm placeholder:text-gray-400 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         placeholder="Book your services..."
@@ -131,6 +167,7 @@ export default function HomeSection() {
                         type="text"
                         name="search-location"
                         id="search-location"
+                        readOnly
                         onClick={() => setOpenLocation(true)}
                         className="relative block h-12 w-full cursor-pointer rounded-none rounded-r-md border-gray-300 pl-8 placeholder:text-sm placeholder:text-gray-400 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         placeholder="Location"
@@ -149,7 +186,7 @@ export default function HomeSection() {
           className="relative z-20"
           onClose={() => {
             setOpenServices(false);
-            setSearch("");
+            setSearchServices("");
           }}
         >
           <Transition.Child
@@ -182,8 +219,8 @@ export default function HomeSection() {
                         <input
                           type="text"
                           name="search-service"
-                          value={search}
-                          onChange={(e) => setSearch(e.target.value)}
+                          value={searchServices}
+                          onChange={(e) => setSearchServices(e.target.value)}
                           id="search-service"
                           className="relative block h-12 w-full rounded-none rounded-t-md border-gray-300 py-7 pl-16 placeholder:text-sm placeholder:text-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           placeholder="What are you looking for?"
@@ -204,18 +241,35 @@ export default function HomeSection() {
                       </div>
                     </div>
                   </div>
-                  {data && data.length > 0 ? (
+                  {servicesData && servicesData.length > 0 ? (
                     <div className="p-4">
                       <h3 className="mb-2 text-sm font-semibold">SERVICES</h3>
                       <ul>
-                        {data
+                        {servicesData
                           ?.map((item, idx) => (
-                            <li key={idx}>
-                              <div className="flex items-center gap-3 py-2">
+                            <li
+                              key={idx}
+                              className="group hover:cursor-pointer"
+                              onClick={() => {
+                                setOpenServices(false);
+                                setService(item);
+                                mutateShops({
+                                  name: item,
+                                });
+                                const element =
+                                  document.getElementById("recommended");
+                                if (element) {
+                                  element.scrollIntoView({
+                                    behavior: "smooth",
+                                  });
+                                }
+                              }}
+                            >
+                              <div className="flex items-center gap-3 py-2 group-hover:text-blue-600">
                                 <MagnifyingGlassIcon
                                   width={20}
                                   height={20}
-                                  className="text-gray-300"
+                                  className="text-gray-300 group-hover:text-blue-600"
                                 />
                                 <span>{item}</span>
                               </div>
@@ -234,6 +288,20 @@ export default function HomeSection() {
                           <li key={idx}>
                             <button
                               type="button"
+                              onClick={() => {
+                                setOpenServices(false);
+                                setService(item);
+                                mutateShops({
+                                  name: item,
+                                });
+                                const element =
+                                  document.getElementById("recommended");
+                                if (element) {
+                                  element.scrollIntoView({
+                                    behavior: "smooth",
+                                  });
+                                }
+                              }}
                               className="inline-flex items-center rounded-2xl border border-gray-300 bg-white px-2.5 py-1.5 text-sm  font-normal text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                             >
                               {item}
@@ -255,7 +323,7 @@ export default function HomeSection() {
           className="relative z-20"
           onClose={() => {
             setOpenLocation(false);
-            setSearch("");
+            setSearchLocation("");
           }}
         >
           <Transition.Child
@@ -288,8 +356,8 @@ export default function HomeSection() {
                         <input
                           type="text"
                           name="search-service"
-                          value={search}
-                          onChange={(e) => setSearch(e.target.value)}
+                          value={searchLocation}
+                          onChange={(e) => setSearchLocation(e.target.value)}
                           id="search-service"
                           className="relative block h-12 w-full rounded-none rounded-t-md border-gray-300 py-7 pl-16 placeholder:text-sm placeholder:text-gray-300 focus:z-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           placeholder="Where?"
@@ -318,9 +386,10 @@ export default function HomeSection() {
                           <span className="text-xs font-light text-gray-400">
                             Your Current Location
                           </span>
-                          <div>{city}</div>
+                          <div>{address}</div>
                         </div>
                       </div>
+
                       <button
                         type="button"
                         onClick={() => {
@@ -347,21 +416,68 @@ export default function HomeSection() {
                       <div className="w-full border-t border-gray-300" />
                     </div>
                   </div>
-                  {data1 ? (
-                    "hh"
+                  {citiesData && citiesData.length > 0 ? (
+                    <div className="p-4">
+                      <h3 className="mb-2 text-sm font-semibold">Locations</h3>
+                      <ul>
+                        {citiesData
+                          ?.map((item, idx) => (
+                            <li
+                              key={idx}
+                              className="group hover:cursor-pointer"
+                              onClick={() => {
+                                setOpenLocation(false);
+                                mutateShops({
+                                  location: item,
+                                });
+                                const element =
+                                  document.getElementById("recommended");
+                                if (element) {
+                                  element.scrollIntoView({
+                                    behavior: "smooth",
+                                  });
+                                }
+                              }}
+                            >
+                              <div className="flex items-center gap-3 py-2 group-hover:text-blue-600">
+                                <MapPinIcon
+                                  width={20}
+                                  height={20}
+                                  className="text-gray-300 group-hover:text-blue-600"
+                                />
+                                <span>{item.city}</span>
+                              </div>
+                            </li>
+                          ))
+                          .slice(0, 8)}
+                      </ul>
+                    </div>
                   ) : (
                     <div className="p-4">
-                      <h3 className="mb-4 text-xs font-semibold">
-                        LOOKING FOR SERVICES ELSEWHERE?{" "}
+                      <h3 className="font-base mb-4 text-sm">
+                        LOOKING FOR SERVICES ELSEWHERE?
                       </h3>
                       <ul className="flex flex-wrap gap-3">
                         {cities.slice(0, 10).map((item, idx) => (
                           <li key={idx}>
                             <button
+                              onClick={() => {
+                                setOpenLocation(false);
+                                mutateShops({
+                                  location: item,
+                                });
+                                const element =
+                                  document.getElementById("recommended");
+                                if (element) {
+                                  element.scrollIntoView({
+                                    behavior: "smooth",
+                                  });
+                                }
+                              }}
                               type="button"
                               className="inline-flex items-center rounded-2xl border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-normal text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                             >
-                              {item}
+                              {item.city}
                             </button>
                           </li>
                         ))}

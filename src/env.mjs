@@ -34,9 +34,6 @@ const server = z.object({
  */
 const client = z.object({
   NEXT_PUBLIC_MAP_KEY: z.string().min(1),
-  CLOUD_NAME: z.string().min(1),
-  CLOUD_API_KEY: z.string().min(1),
-  CLOUD_API_SECRET: z.string().min(1),
   // NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: z.string().min(1),
   // NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
 });
@@ -54,9 +51,6 @@ const processEnv = {
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   NEXT_PUBLIC_MAP_KEY: process.env.NEXT_PUBLIC_MAP_KEY,
-  CLOUD_NAME: process.env.CLOUD_NAME,
-  CLOUD_API_KEY: process.env.CLOUD_API_KEY,
-  CLOUD_API_SECRET: process.env.CLOUD_API_SECRET,
   // NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
 };
 

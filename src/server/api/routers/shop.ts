@@ -1,15 +1,13 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { distance } from "../../../utils/closest";
 import { shopSchema, shopSchemaUpdate } from "../schemas/shop";
-import { barberProcedure, createTRPCRouter, protectedProcedure } from "../trpc";
-import cloudinary from "cloudinary";
-import { env } from "../../../env.mjs";
-
-// cloudinary.v2.config({
-//   cloud_name: env.CLOUD_NAME,
-//   api_key: env.CLOUD_API_KEY,
-//   api_secret: env.CLOUD_API_SECRET,
-// });
+import {
+  barberProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "../trpc";
 
 export const shopRouter = createTRPCRouter({
   createShop: barberProcedure
@@ -24,6 +22,47 @@ export const shopRouter = createTRPCRouter({
         },
       });
       return shop;
+    }),
+
+  findShop: protectedProcedure
+    .input(
+      z.object({
+        name: z.string().optional(),
+        location: z
+          .object({
+            lng: z.number(),
+            lat: z.number(),
+            city: z.string(),
+          })
+          .optional(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const lat = input.location?.lat || 33.9716;
+      const lng = input.location?.lng || -6.8498;
+
+      let shops = ctx.prisma.shop.findMany({
+        where: {
+          name: {
+            contains: input.name,
+          },
+        },
+      });
+
+      if (input.location) {
+        shops = ctx.prisma.shop.findMany({
+          where: {
+            city: input.location.city,
+          },
+        });
+      }
+      const shopsWithDistance = (await shops).sort(
+        (a, b) =>
+          distance({ lat: a.lat, lng: a.lng }, { lat, lng }) -
+          distance({ lat: b.lat, lng: b.lng }, { lat, lng })
+      );
+
+      return shopsWithDistance;
     }),
   updateShop: barberProcedure
     .input(shopSchemaUpdate)
