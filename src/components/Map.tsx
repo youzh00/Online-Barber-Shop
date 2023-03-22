@@ -9,12 +9,7 @@ const containerStyle = {
   height: "400px",
 };
 
-type PropsType = {
-  lat: number;
-  lng: number;
-};
-
-function Map(props: PropsType) {
+function Map() {
   const [lat, setLat] = useState(31.632036898637434);
   const [lng, setLng] = useState(-7.983678820018496);
 

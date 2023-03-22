@@ -1,27 +1,22 @@
-import { StarIcon } from "@heroicons/react/20/solid";
-import { Dialog, RadioGroup, Transition } from "@headlessui/react";
-import Header from "../../components/Header";
-import Image from "next/image";
-import { Fragment, useEffect, useRef, useState } from "react";
-import { env } from "../../env.mjs";
+import { Dialog, Transition } from "@headlessui/react";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import Image from "next/image";
 import { useRouter } from "next/router";
-import { api } from "../../utils/api";
+import { Fragment, useState } from "react";
 import Carousel from "../../components/Carousel";
+import Header from "../../components/Header";
+import { env } from "../../env.mjs";
+import { api } from "../../utils/api";
 
 // const reviews = { href: "#", average: 4, totalCount: 117 };
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
 const shop = {};
 export default function Example() {
   const router = useRouter();
-  const { id } = router.query;
-  console.log(id);
+  const { id } = router.query as { id: string };
 
-  const { data: shop } = api.shop?.getShopById.useQuery({ id });
-  const incrementQueue = api.shop?.incrementQueue.useMutation();
+  const { data: shop } = api.shop.getShopById.useQuery({ id });
+  const incrementQueue = api.shop.incrementQueue.useMutation();
 
   const breadcrumbs = [
     { id: 1, name: "Shops", href: "/home" },
@@ -33,16 +28,15 @@ export default function Example() {
   ];
   // modal section
   const [open, setOpen] = useState(false);
-  const center = { lat: shop?.lat, lng: shop?.lng };
+  const center = { lat: shop?.lat || 31, lng: shop?.lng || -6 };
   const containerStyle = {
     width: "450px",
     height: "450px",
   };
-  console.log(shop);
 
   function HandleSubmit(e: React.MouseEvent<HTMLFormElement, MouseEvent>) {
     e.preventDefault();
-    incrementQueue.mutate({ id: shop?.id });
+    incrementQueue.mutate({ id: shop?.id as string });
   }
   return (
     shop && (

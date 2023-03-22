@@ -44,7 +44,7 @@ export const serviceRouter = createTRPCRouter({
     )
     .mutation(({ input }) =>
       allCities.filter(({ city }) =>
-        (city as string).toLowerCase().includes(input.query.toLowerCase())
+        city.toLowerCase().includes(input.query.toLowerCase())
       )
     ),
 });

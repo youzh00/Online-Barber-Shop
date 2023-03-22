@@ -1,18 +1,15 @@
 import { Disclosure, Menu, Switch, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
-  CogIcon,
-  KeyIcon,
-  UserCircleIcon,
-  XMarkIcon,
-  PlusIcon,
   BuildingStorefrontIcon,
+  PlusIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import { Fragment, useEffect, useState } from "react";
 import { api } from "../../utils/api";
-import Link from "next/link";
 
 const subNavigation = [
   {
@@ -54,16 +51,17 @@ export default function SettingsPage() {
     setAvailableToSwitch(data?.user.role === "BARBER");
   }, [data?.user.role]);
 
-  function handleSave(e: React.MouseEvent<HTMLFormElement, MouseEvent>) {
-    // e.preventDefault();
+  function handleSave() {
     if (username !== "" && username !== null) {
       updateProfile.mutate({
         name: username,
       });
     }
-    becomeBarber.mutate({
-      id: data?.user.id || "",
-    });
+    if (availableToSwitch && !isBarber) {
+      becomeBarber.mutate({
+        id: data?.user.id || "",
+      });
+    }
   }
 
   return (

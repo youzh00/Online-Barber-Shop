@@ -8,11 +8,7 @@ interface BannerProps {
 }
 
 export default function Banner({ setVisible }: BannerProps) {
-  const becomeBarber = api.user.updateToBarber.useMutation({
-    onSuccess: () => {
-      console.log("success");
-    },
-  });
+  const becomeBarber = api.user.updateToBarber.useMutation();
   const { data } = useSession();
   return (
     <div className="fixed inset-x-0 bottom-0 pb-2 sm:pb-5">

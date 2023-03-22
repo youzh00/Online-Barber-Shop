@@ -27,8 +27,8 @@ export const shopSchemaUpdate = z.object({
   queue: z.number().optional(),
   pictures: z.array(z.string().url()).optional(),
   description: z.string().optional(),
-  opening: z.date().optional(),
-  closing: z.date().optional(),
+  opening: z.string().optional(),
+  closing: z.string().optional(),
   lat: z.number().optional(),
   lng: z.number().optional(),
 });

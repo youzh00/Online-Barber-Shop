@@ -14,6 +14,7 @@ export const haircutRouter = createTRPCRouter({
           price: input.price,
           picture: input.picture,
           shopId: input.shopId,
+          estimatedTime: input.estimatedTime,
         },
       });
       return haircut;

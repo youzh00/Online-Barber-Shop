@@ -1,26 +1,18 @@
-import {
-  Disclosure,
-  Menu,
-  Switch,
-  Transition,
-  Dialog,
-} from "@headlessui/react";
+import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
   CogIcon,
+  ExclamationTriangleIcon,
   KeyIcon,
   UserCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
-import { api } from "../../utils/api";
 import Link from "next/link";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import { redirect } from "next/dist/server/api-utils";
-import Signin from "../signin";
-import { log } from "console";
+import { api } from "../../utils/api";
+
 const subNavigation = [
   {
     name: "Profile",
@@ -53,9 +45,6 @@ export default function SettingsPage() {
   const cancelButtonRef = useRef(null);
   const [name, setName] = useState("");
   const [confirmation, setConfirmation] = useState(true);
-
-  console.log(name == "I want to delete my account");
-  console.log(confirmation);
 
   useEffect(() => {
     if (name == "I want to delete my account") {

@@ -47,7 +47,7 @@ const toBase64 = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
+    reader.onload = () => resolve(reader.result as string);
     reader.onerror = (error) => reject(error);
   });
 
@@ -67,7 +67,7 @@ const containerStyle = {
 
 export default function SettingsPage() {
   const { data } = useSession();
-  const { data: createData, mutate } = api.shop.createShop.useMutation();
+  const { mutate } = api.shop.createShop.useMutation();
 
   const [name, setName] = useState("");
   const [shopType, setShopType] = useState<SHOPTYPE>(SHOPTYPE.BOTH);
@@ -95,8 +95,8 @@ export default function SettingsPage() {
         });
 
   function handleClick(e: google.maps.MapMouseEvent) {
-    setLat(Number(e.latLng.lat()));
-    setLng(Number(e.latLng.lng()));
+    setLat(Number(e.latLng?.lat()));
+    setLng(Number(e.latLng?.lng()));
   }
 
   function onFileChange(e: React.FormEvent<HTMLInputElement>) {
@@ -134,7 +134,6 @@ export default function SettingsPage() {
       type: shopType,
       pictures: images,
     });
-    console.log(createData);
   }
 
   return (
@@ -405,7 +404,7 @@ export default function SettingsPage() {
                             <Combobox.Input
                               className="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
                               onChange={(event) => setQuery(event.target.value)}
-                              displayValue={(city) => city}
+                              displayValue={(city) => city as unknown as string}
                               required
                             />
                             <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
@@ -435,7 +434,7 @@ export default function SettingsPage() {
                                         <span
                                           className={classNames(
                                             "block truncate",
-                                            selected && "font-semibold"
+                                            selected ? "font-semibold" : ""
                                           )}
                                         >
                                           {city.city}
@@ -499,7 +498,9 @@ export default function SettingsPage() {
                             name="shoptype"
                             value={shopType}
                             // to solve
-                            onChange={(e) => setShopType(e.target.value)}
+                            onChange={(e) =>
+                              setShopType(e.target.value as SHOPTYPE)
+                            }
                             className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
                           >
                             <option>{SHOPTYPE.MALE}</option>
@@ -608,7 +609,6 @@ export default function SettingsPage() {
                             name="closing"
                             required
                             id="closing"
-                            required={true}
                             value={closingHours}
                             onChange={(e) => setClosingHours(e.target.value)}
                             autoComplete="closing"

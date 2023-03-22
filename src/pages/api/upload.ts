@@ -1,5 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import cloudinary from "../../utils/cloudinary";
+import cloudinary from "cloudinary";
+import { env } from "../../env.mjs";
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+cloudinary.v2.config({
+  cloud_name: env.CLOUD_NAME,
+  api_key: env.CLOUD_API_KEY,
+  api_secret: env.CLOUD_API_SECRET,
+});
 
 interface ExtendedNextApiRequest extends NextApiRequest {
   body: {
@@ -12,12 +20,13 @@ export default async function Upload(
   res: NextApiResponse
 ) {
   const { images } = req.body;
-  console.log(images);
-  const imagesUrls = [];
+  const imagesUrls: string[] = [];
   for (const image of images) {
-    const uploadResponse = await cloudinary.uploader.upload(image, {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    const uploadResponse = await cloudinary.v2.uploader.upload(image, {
       upload_preset: "ml_default",
     });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     imagesUrls.push(uploadResponse.url);
   }
   return res.json({ imagesUrls });

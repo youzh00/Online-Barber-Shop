@@ -1,9 +1,7 @@
-import { Shop } from "@prisma/client";
+import { type Shop } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 import useStore from "../store/useStore";
-import { api } from "../utils/api";
 import { distance } from "../utils/closest";
 
 type Props = {

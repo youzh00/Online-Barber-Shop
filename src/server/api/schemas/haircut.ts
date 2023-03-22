@@ -6,6 +6,7 @@ export const HaircutSchema = z.object({
   description: z.string(),
   price: z.number(),
   picture: z.string(),
+  estimatedTime: z.number(),
 });
 
 export const HaircutSchemaForUpdate = z.object({

@@ -1,4 +1,4 @@
-import { Shop } from "@prisma/client";
+import { type Shop } from "@prisma/client";
 import Carousel from "../components/Carousel";
 import Header from "../components/Header";
 import HomeSection from "../components/HomeSection";
