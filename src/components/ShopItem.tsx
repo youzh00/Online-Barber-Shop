@@ -13,28 +13,28 @@ type Props = {
 const shopHaircuts = [
   {
     id: "sdf56456sdf56sdf56sdf",
-    name: "haircut m9wda",
+    name: "haircut",
     price: 100,
     estimatedTime: 30,
     shopId: "sdf56456sdf56sdf56sdf",
   },
   {
     id: "sdf56456sdf56sdf56sdf",
-    name: "haircut m9wda",
+    name: "haircut for men",
     price: 100,
     estimatedTime: 30,
     shopId: "sdf56456sdf56sdf56sdf",
   },
   {
     id: "sdf56456sdf56sdf56sdf",
-    name: "haircut m9wda",
+    name: "haircut for women",
     price: 100,
     estimatedTime: 30,
     shopId: "sdf56456sdf56sdf56sdf",
   },
   {
     id: "sdf56456sdf56sdf56sdf",
-    name: "haircut m9wda",
+    name: "haircut for kids",
     price: 100,
     estimatedTime: 30,
     shopId: "sdf56456sdf56sdf56sdf",

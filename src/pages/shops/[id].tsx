@@ -20,16 +20,20 @@ export default function Example() {
   const { id } = router.query;
   console.log(id);
 
-  const { data: shop } = api.shop.getShopById.useQuery({ id });
-  const incrementQueue = api.shop.incrementQueue.useMutation();
+  const { data: shop } = api.shop?.getShopById.useQuery({ id });
+  const incrementQueue = api.shop?.incrementQueue.useMutation();
 
   const breadcrumbs = [
     { id: 1, name: "Shops", href: "/home" },
-    { id: 2, name: shop.type == "BOTH" ? "All Gender" : shop.type, href: "#" },
+    {
+      id: 2,
+      name: shop?.type == "BOTH" ? "All Gender" : shop?.type,
+      href: "#",
+    },
   ];
   // modal section
   const [open, setOpen] = useState(false);
-  const center = { lat: shop.lat, lng: shop.lng };
+  const center = { lat: shop?.lat, lng: shop?.lng };
   const containerStyle = {
     width: "450px",
     height: "450px",
@@ -38,7 +42,7 @@ export default function Example() {
 
   function HandleSubmit(e: React.MouseEvent<HTMLFormElement, MouseEvent>) {
     e.preventDefault();
-    incrementQueue.mutate({ id: shop.id });
+    incrementQueue.mutate({ id: shop?.id });
   }
   return (
     shop && (
@@ -76,19 +80,27 @@ export default function Example() {
                 ))}
                 <li className="text-sm">
                   <h2 className="font-medium text-gray-500 hover:text-gray-600">
-                    {shop.name}
+                    {shop?.name}
                   </h2>
                 </li>
               </ol>
             </nav>
 
             {/* Image gallery */}
-            <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
+            <div className="mx-auto mt-6  max-w-3xl">
               <Carousel>
-                {shop.pictures.map((picture) => {
+                {shop?.pictures.map((picture) => {
                   return (
-                    <div key={picture}>
-                      <Image src={picture} fill={true} alt="" />
+                    <div
+                      key={picture}
+                      className="relative h-96 flex-[0_0_100%]"
+                    >
+                      <Image
+                        src={picture}
+                        className="w-full object-cover"
+                        fill
+                        alt=""
+                      />
                     </div>
                   );
                 })}
@@ -100,7 +112,7 @@ export default function Example() {
               {/* Shop name */}
               <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
                 <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-                  {shop.name}
+                  {shop?.name}
                 </h1>
               </div>
 
@@ -109,7 +121,7 @@ export default function Example() {
                 <div className="mt-3">
                   <div>
                     <h2 className="text-lg font-medium text-gray-900">
-                      In Queue : {shop.queue}
+                      In Queue : {shop?.queue}
                     </h2>
                   </div>
                 </div>
@@ -289,7 +301,7 @@ export default function Example() {
 
                   <div className="space-y-6">
                     <p className="text-base text-gray-900">
-                      {shop.description}
+                      {shop?.description}
                     </p>
                   </div>
                 </div>
