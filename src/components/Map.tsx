@@ -1,6 +1,9 @@
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import React, { useState } from "react";
 
+// create me a function that takes a lat and lng and returns a string
+// that is the url to the google maps static image
+
 const containerStyle = {
   width: "400px",
   height: "400px",
@@ -18,8 +21,8 @@ function Map(props: PropsType) {
   const center = { lat, lng };
 
   function handleClick(e: google.maps.MapMouseEvent) {
-    setLat(Number(e.latLng.lat()));
-    setLng(Number(e.latLng.lng()));
+    setLat(Number(e.latLng?.lat()));
+    setLng(Number(e.latLng?.lng()));
   }
   return (
     <LoadScript googleMapsApiKey="AIzaSyB7asgpEVzrsdFCpnWfUj9D6AsD7ci_VJI">

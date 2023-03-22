@@ -1,8 +1,18 @@
-import type { NextRequest, NextResponse } from "next/server";
+import type { NextApiRequest, NextApiResponse } from "next";
 import cloudinary from "../../utils/cloudinary";
 
-export default async function Upload(req: NextRequest, res: NextResponse) {
+interface ExtendedNextApiRequest extends NextApiRequest {
+  body: {
+    images: string[];
+  };
+}
+
+export default async function Upload(
+  req: ExtendedNextApiRequest,
+  res: NextApiResponse
+) {
   const { images } = req.body;
+  console.log(images);
   const imagesUrls = [];
   for (const image of images) {
     const uploadResponse = await cloudinary.uploader.upload(image, {

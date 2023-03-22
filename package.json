@@ -34,6 +34,7 @@
     "zustand": "^4.3.6"
   },
   "devDependencies": {
+    "@types/google.maps": "^3.52.3",
     "@types/node": "^18.11.18",
     "@types/prettier": "^2.7.2",
     "@types/react": "^18.0.26",

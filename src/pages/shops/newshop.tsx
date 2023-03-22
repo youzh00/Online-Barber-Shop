@@ -111,7 +111,7 @@ export default function SettingsPage() {
         });
       })
       .then((res) => res.json())
-      .then(({ imagesUrls }) => {
+      .then(({ imagesUrls }: { imagesUrls: string[] }) => {
         setImages(imagesUrls);
       })
       .catch((err) => console.log(err));
