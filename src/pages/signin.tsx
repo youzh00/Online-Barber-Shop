@@ -73,7 +73,6 @@ export default function Signin({
                   <label
                     htmlFor="remember-me"
                     className="ml-2 block text-sm text-gray-900"
-                    
                   >
                     Remember me
                   </label>
@@ -152,10 +151,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     req: context.req,
     res: context.res,
   });
-
-  // If the user is already logged in, redirect.
-  // Note: Make sure not to redirect to the same page
-  // To avoid an infinite loop!
+  console.log("session");
   if (session) {
     return { redirect: { destination: "/" } };
   }
