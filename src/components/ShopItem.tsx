@@ -64,7 +64,7 @@ const ShopItem = ({ shop }: Props) => {
         <Image
           fill={true}
           className="w-full object-cover"
-          src={"/ra7ma.jpg"}
+          src={shop.pictures[0] as string}
           alt="Shop image"
         />
         <div className="absolute right-0 flex w-auto flex-col items-center rounded-bl-lg bg-black/50 p-2 text-white">
@@ -92,7 +92,7 @@ const ShopItem = ({ shop }: Props) => {
                   <div className="flex items-center gap-4">
                     <div className="flex flex-col items-end">
                       <span className="font-bold">
-                        ${haircut.price.toFixed(2)}
+                        {haircut.price.toFixed(2)} DH
                       </span>
                       <span className="text-xs font-normal">
                         {haircut.estimatedTime}min
