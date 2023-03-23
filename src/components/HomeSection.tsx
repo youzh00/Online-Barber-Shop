@@ -1,3 +1,5 @@
+"use client";
+
 import { Dialog, Transition } from "@headlessui/react";
 import {
   MagnifyingGlassIcon,
@@ -55,7 +57,7 @@ export default function HomeSection({ setShops }: HomeSectionProps) {
 
   const { mutate: mutateShops } = api.shop.findShop.useMutation({
     onSuccess: (data) => {
-      setShops(data);
+      if (data) setShops(data);
     },
   });
 

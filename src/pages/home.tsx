@@ -49,6 +49,7 @@ const home = () => {
 
             <div className="absolute inset-0 bg-slate-500 mix-blend-multiply" />
           </div>
+
           <Header transparent />
           <HomeSection setShops={setShops} />
         </div>
