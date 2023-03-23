@@ -16,13 +16,19 @@ const navigation = [
   { name: "Company", href: "#" },
 ];
 
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "settings" },
-];
 const Header = ({ transparent = false }: { transparent?: boolean }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: sessionData } = useSession();
+
+  const userNavigation = [
+    { name: "Your Profile", href: "#" },
+    { name: "Settings", href: "settings" },
+    sessionData?.user.role == "BARBER" && { name: "My Shops", href: "/shops" },
+    sessionData?.user.role == "BARBER" && {
+      name: "Create new shop",
+      href: "/shops/newshop",
+    },
+  ];
 
   return (
     <div

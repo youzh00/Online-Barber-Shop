@@ -19,7 +19,7 @@ export default function Example() {
   const incrementQueue = api.shop.incrementQueue.useMutation();
 
   const breadcrumbs = [
-    { id: 1, name: "Shops", href: "/home" },
+    { id: 1, name: "Barbers", href: "/home" },
     {
       id: 2,
       name: shop?.type == "BOTH" ? "All Gender" : shop?.type,
@@ -35,7 +35,6 @@ export default function Example() {
   };
 
   function HandleSubmit(e: React.MouseEvent<HTMLFormElement, MouseEvent>) {
-    e.preventDefault();
     incrementQueue.mutate({ id: shop?.id as string });
   }
   return (
