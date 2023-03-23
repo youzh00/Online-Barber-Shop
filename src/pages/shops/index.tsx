@@ -5,7 +5,7 @@ import {
   PlusIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useState } from "react";
@@ -27,11 +27,6 @@ const subNavigation = [
     current: false,
   },
 ];
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
-];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -39,6 +34,17 @@ function classNames(...classes: string[]) {
 
 export default function SettingsPage() {
   const { data } = useSession();
+  const userNavigation =
+    data?.user.role == "BARBER"
+      ? [
+          { name: "Settings", href: "/settings" },
+          { name: "My Shops", href: "/shops" },
+          {
+            name: "Create new shop",
+            href: "/shops/newshop",
+          },
+        ]
+      : [{ name: "Settings", href: "/settings" }];
   const { data: shops } = api.shop.getUserShops.useQuery();
 
   return (
@@ -62,7 +68,7 @@ export default function SettingsPage() {
                       <div className="flex-shrink-0">
                         <div className="block h-8 w-auto">
                           <span className="text-2xl font-bold text-white">
-                            BarberShop
+                            <Link href={"/home"}>BarberShop</Link>
                           </span>
                         </div>
                       </div>
@@ -129,6 +135,23 @@ export default function SettingsPage() {
                                   )}
                                 </Menu.Item>
                               ))}
+                              <Menu.Item key={"signout"}>
+                                {({ active }) => (
+                                  <Link
+                                    href="#"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      void signOut();
+                                    }}
+                                    className={classNames(
+                                      active ? "bg-gray-100" : "",
+                                      "block px-4 py-2 text-sm text-gray-700"
+                                    )}
+                                  >
+                                    Sign out
+                                  </Link>
+                                )}
+                              </Menu.Item>
                             </Menu.Items>
                           </Transition>
                         </Menu>

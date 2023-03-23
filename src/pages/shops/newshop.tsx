@@ -63,14 +63,17 @@ const containerStyle = {
 
 export default function SettingsPage() {
   const { data } = useSession();
-  const userNavigation = [
-    { name: "Settings", href: "/settings" },
-    data?.user.role == "BARBER" && { name: "My Shops", href: "/shops" },
-    data?.user.role == "BARBER" && {
-      name: "Create new shop",
-      href: "/shops/newshop",
-    },
-  ];
+  const userNavigation =
+    data?.user.role == "BARBER"
+      ? [
+          { name: "Settings", href: "/settings" },
+          { name: "My Shops", href: "/shops" },
+          {
+            name: "Create new shop",
+            href: "/shops/newshop",
+          },
+        ]
+      : [{ name: "Settings", href: "/settings" }];
   const { mutate } = api.shop.createShop.useMutation();
 
   const [name, setName] = useState("");

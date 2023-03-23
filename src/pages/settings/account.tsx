@@ -42,14 +42,17 @@ export default function SettingsPage() {
   const [name, setName] = useState("");
   const [confirmation, setConfirmation] = useState(true);
 
-  const userNavigation = [
-    { name: "Settings", href: "/settings" },
-    data?.user.role == "BARBER" && { name: "My Shops", href: "/shops" },
-    data?.user.role == "BARBER" && {
-      name: "Create new shop",
-      href: "/shops/newshop",
-    },
-  ];
+  const userNavigation =
+    data?.user.role == "BARBER"
+      ? [
+          { name: "Settings", href: "/settings" },
+          { name: "My Shops", href: "/shops" },
+          {
+            name: "Create new shop",
+            href: "/shops/newshop",
+          },
+        ]
+      : [{ name: "Settings", href: "/settings" }];
   useEffect(() => {
     if (name == "I want to delete my account") {
       setConfirmation(false);
