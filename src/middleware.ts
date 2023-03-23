@@ -6,9 +6,9 @@ export default withAuth(
   function middleware(req) {
     const token = req.nextauth.token;
 
-    if (req.nextUrl.pathname.startsWith("/home") && token?.role !== "BARBER") {
-      return NextResponse.redirect(new URL("/", req.url));
-    }
+    // if (req.nextUrl.pathname.startsWith("/home") && token?.role !== null) {
+    //   return NextResponse.redirect(new URL("/home", req.url));
+    // }
   },
   {
     callbacks: {
