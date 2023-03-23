@@ -5,6 +5,7 @@ import type {
 import { getProviders, signIn } from "next-auth/react";
 import Image from "next/image";
 import { getServerAuthSession } from "../server/auth";
+import Footer from "../components/Footer";
 
 export default function Signin({
   providers,
@@ -142,6 +143,7 @@ export default function Signin({
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

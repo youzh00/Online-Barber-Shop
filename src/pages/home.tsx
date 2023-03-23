@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import HomeSection from "../components/HomeSection";
 import ShopC from "../components/Shop";
 import ShopsList from "../components/ShopsList";
+import Footer from "../components/Footer";
 
 const SLIDE_COUNT = 5;
 const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
@@ -24,60 +25,63 @@ const home = () => {
   const [shops, setShops] = useState<Shop[]>([]);
 
   return (
-    <div>
-      <div className="relative">
-        <div className="absolute inset-0 -z-10 overflow-hidden">
-          <div
-            style={{
-              backgroundImage:
-                "url(https://dk2h3gy4kn9jw.cloudfront.net/web-2019/d64d531d/img/header-bg.e7c5c48.jpg)",
-            }}
-          >
-            <video playsInline autoPlay muted loop className="object-cover">
-              <source
-                src="https://booksy-public.s3.amazonaws.com/horizontal_.webm"
-                type="video/webm"
-              />
-              <source
-                src="https://booksy-public.s3.amazonaws.com/US.mp4"
-                type="video/mp4"
-              />
-            </video>
-          </div>
+    <>
+      <div>
+        <div className="relative">
+          <div className="absolute inset-0 -z-10 overflow-hidden">
+            <div
+              style={{
+                backgroundImage:
+                  "url(https://dk2h3gy4kn9jw.cloudfront.net/web-2019/d64d531d/img/header-bg.e7c5c48.jpg)",
+              }}
+            >
+              <video playsInline autoPlay muted loop className="object-cover">
+                <source
+                  src="https://booksy-public.s3.amazonaws.com/horizontal_.webm"
+                  type="video/webm"
+                />
+                <source
+                  src="https://booksy-public.s3.amazonaws.com/US.mp4"
+                  type="video/mp4"
+                />
+              </video>
+            </div>
 
-          <div className="absolute inset-0 bg-slate-500 mix-blend-multiply" />
+            <div className="absolute inset-0 bg-slate-500 mix-blend-multiply" />
+          </div>
+          <Header transparent />
+          <HomeSection setShops={setShops} />
         </div>
-        <Header transparent />
-        <HomeSection setShops={setShops} />
+        <main>
+          <div className="mx-auto max-w-7xl bg-white py-6 sm:px-6 lg:px-8">
+            {shops.length > 0 ? (
+              <>
+                <h2 className="mb-4 text-3xl font-bold" id="recommended">
+                  Results
+                </h2>
+                <ShopsList shops={shops}></ShopsList>
+              </>
+            ) : (
+              <section>
+                <h2 className="mb-4 text-2xl font-bold" id="recommended">
+                  Recommended
+                </h2>
+                <Carousel align="start">
+                  {SLIDES.map((src, i) => {
+                    return (
+                      <div className="relative flex-[0_0_25%]" key={i}>
+                        <ShopC {...shop} />
+                      </div>
+                    );
+                  })}
+                </Carousel>
+              </section>
+            )}
+          </div>
+        </main>
       </div>
-      <main>
-        <div className="mx-auto max-w-7xl bg-white py-6 sm:px-6 lg:px-8">
-          {shops.length > 0 ? (
-            <>
-              <h2 className="mb-4 text-3xl font-bold" id="recommended">
-                Results
-              </h2>
-              <ShopsList shops={shops}></ShopsList>
-            </>
-          ) : (
-            <section>
-              <h2 className="mb-4 text-2xl font-bold" id="recommended">
-                Recommended
-              </h2>
-              <Carousel align="start">
-                {SLIDES.map((src, i) => {
-                  return (
-                    <div className="relative flex-[0_0_25%]" key={i}>
-                      <ShopC {...shop} />
-                    </div>
-                  );
-                })}
-              </Carousel>
-            </section>
-          )}
-        </div>
-      </main>
-    </div>
+      <Footer />
+    </>
   );
 };
 
