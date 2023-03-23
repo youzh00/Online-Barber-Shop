@@ -11,6 +11,7 @@ import Link from "next/link";
 import { Fragment, useEffect, useState } from "react";
 import { api } from "../../utils/api";
 import Footer from "../../components/Footer";
+import Shop from "../../components/Shop";
 
 const subNavigation = [
   {
@@ -261,10 +262,13 @@ export default function SettingsPage() {
                 </aside>
                 <ul
                   role="list"
-                  className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+                  className="col-span-9 grid grid-cols-1 gap-6 p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
                 >
-                  Hada grid mgad khass hir itrendra shop list dial user w raha
-                  fetchitha mn backend
+                  {shops?.map((shop) => (
+                    <li key={shop.id}>
+                      <Shop {...shop} />
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
