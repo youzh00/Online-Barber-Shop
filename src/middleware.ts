@@ -6,8 +6,8 @@ export default withAuth(
   function middleware(req) {
     const token = req.nextauth.token;
 
-    if (req.nextUrl.pathname.startsWith("/home") && token?.role !== "BARBER") {
-      return NextResponse.redirect(new URL("/", req.url));
+    if (req.nextUrl.pathname.startsWith("/shops") && token?.role !== "BARBER") {
+      return NextResponse.redirect(new URL("/home", req.url));
     }
   },
   {
@@ -19,4 +19,4 @@ export default withAuth(
   }
 );
 
-export const config = { matcher: ["/home", "/settings"] };
+export const config = { matcher: ["/home", "/settings", "/shops"] };
