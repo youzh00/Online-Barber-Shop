@@ -7,7 +7,7 @@ import {
   UserCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useRef, useState } from "react";
@@ -28,11 +28,6 @@ const subNavigation = [
     current: false,
   },
 ];
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
-];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -46,6 +41,14 @@ export default function SettingsPage() {
   const [name, setName] = useState("");
   const [confirmation, setConfirmation] = useState(true);
 
+  const userNavigation = [
+    { name: "Settings", href: "/settings" },
+    data?.user.role == "BARBER" && { name: "My Shops", href: "/shops" },
+    data?.user.role == "BARBER" && {
+      name: "Create new shop",
+      href: "/shops/newshop",
+    },
+  ];
   useEffect(() => {
     if (name == "I want to delete my account") {
       setConfirmation(false);
@@ -145,6 +148,23 @@ export default function SettingsPage() {
                                 )}
                               </Menu.Item>
                             ))}
+                            <Menu.Item key={"signout"}>
+                              {({ active }) => (
+                                <Link
+                                  href="#"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    void signOut();
+                                  }}
+                                  className={classNames(
+                                    active ? "bg-gray-100" : "",
+                                    "block px-4 py-2 text-sm text-gray-700"
+                                  )}
+                                >
+                                  Sign out
+                                </Link>
+                              )}
+                            </Menu.Item>
                           </Menu.Items>
                         </Transition>
                       </Menu>

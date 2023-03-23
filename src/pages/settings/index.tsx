@@ -6,7 +6,7 @@ import {
   UserCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { Fragment, useEffect, useState } from "react";
 import { api } from "../../utils/api";
@@ -27,11 +27,6 @@ const subNavigation = [
     current: false,
   },
 ];
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
-];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -39,6 +34,15 @@ function classNames(...classes: string[]) {
 
 export default function SettingsPage() {
   const { data } = useSession();
+
+  const userNavigation = [
+    { name: "Settings", href: "/settings" },
+    data?.user.role == "BARBER" && { name: "My Shops", href: "/shops" },
+    data?.user.role == "BARBER" && {
+      name: "Create new shop",
+      href: "/shops/newshop",
+    },
+  ];
   const becomeBarber = api.user.updateToBarber.useMutation();
   const updateProfile = api.user.updateUser.useMutation();
 
@@ -141,7 +145,7 @@ export default function SettingsPage() {
                             {userNavigation.map((item) => (
                               <Menu.Item key={item.name}>
                                 {({ active }) => (
-                                  <a
+                                  <Link
                                     href={item.href}
                                     className={classNames(
                                       active ? "bg-gray-100" : "",
@@ -149,10 +153,27 @@ export default function SettingsPage() {
                                     )}
                                   >
                                     {item.name}
-                                  </a>
+                                  </Link>
                                 )}
                               </Menu.Item>
                             ))}
+                            <Menu.Item key={"signout"}>
+                              {({ active }) => (
+                                <Link
+                                  href="#"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    void signOut();
+                                  }}
+                                  className={classNames(
+                                    active ? "bg-gray-100" : "",
+                                    "block px-4 py-2 text-sm text-gray-700"
+                                  )}
+                                >
+                                  Sign out
+                                </Link>
+                              )}
+                            </Menu.Item>
                           </Menu.Items>
                         </Transition>
                       </Menu>

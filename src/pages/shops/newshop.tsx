@@ -13,7 +13,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useState } from "react";
@@ -36,11 +36,6 @@ const subNavigation = [
     icon: PlusIcon,
     current: true,
   },
-];
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
 ];
 
 const toBase64 = (file: File): Promise<string> =>
@@ -67,6 +62,14 @@ const containerStyle = {
 
 export default function SettingsPage() {
   const { data } = useSession();
+  const userNavigation = [
+    { name: "Settings", href: "/settings" },
+    data?.user.role == "BARBER" && { name: "My Shops", href: "/shops" },
+    data?.user.role == "BARBER" && {
+      name: "Create new shop",
+      href: "/shops/newshop",
+    },
+  ];
   const { mutate } = api.shop.createShop.useMutation();
 
   const [name, setName] = useState("");
@@ -223,6 +226,23 @@ export default function SettingsPage() {
                                 )}
                               </Menu.Item>
                             ))}
+                            <Menu.Item key={"signout"}>
+                              {({ active }) => (
+                                <Link
+                                  href="#"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    void signOut();
+                                  }}
+                                  className={classNames(
+                                    active ? "bg-gray-100" : "",
+                                    "block px-4 py-2 text-sm text-gray-700"
+                                  )}
+                                >
+                                  Sign out
+                                </Link>
+                              )}
+                            </Menu.Item>
                           </Menu.Items>
                         </Transition>
                       </Menu>

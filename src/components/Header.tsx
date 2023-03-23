@@ -21,7 +21,6 @@ const Header = ({ transparent = false }: { transparent?: boolean }) => {
   const { data: sessionData } = useSession();
 
   const userNavigation = [
-    { name: "Your Profile", href: "#" },
     { name: "Settings", href: "settings" },
     sessionData?.user.role == "BARBER" && { name: "My Shops", href: "/shops" },
     sessionData?.user.role == "BARBER" && {
@@ -102,7 +101,7 @@ const Header = ({ transparent = false }: { transparent?: boolean }) => {
                             href={item.href}
                             className={classNames(
                               active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-blue-500"
+                              "block px-4 py-2 text-sm text-gray-500"
                             )}
                           >
                             {item.name}
