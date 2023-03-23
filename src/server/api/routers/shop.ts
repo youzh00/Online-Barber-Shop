@@ -135,4 +135,13 @@ export const shopRouter = createTRPCRouter({
     const shops = await ctx.prisma.shop.findMany();
     return shops;
   }),
+  getUserShops: barberProcedure.query(async ({ ctx }) => {
+    const barber = ctx.session.user;
+    const shops = await ctx.prisma.shop.findMany({
+      where: {
+        userId: barber.id,
+      },
+    });
+    return shops;
+  }),
 });
