@@ -90,7 +90,7 @@ export default function SettingsPage() {
                     <div className="flex-shrink-0">
                       <div className="block h-8 w-auto">
                         <span className="text-2xl font-bold text-white">
-                          BarberShop
+                          <Link href={"/home"}>BarberShop</Link>
                         </span>
                       </div>
                     </div>

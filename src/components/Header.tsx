@@ -42,7 +42,7 @@ const Header = ({ transparent = false }: { transparent?: boolean }) => {
             <Link href="/" className="-m-1.5 p-1.5">
               <span className="sr-only">BarberShop</span>
               <span className="text-2xl font-bold text-sectionBlue">
-                BarberShop
+                <Link href={"/home"}>BarberShop</Link>
               </span>
             </Link>
           </div>
