@@ -259,6 +259,13 @@ export default function SettingsPage() {
                     ))}
                   </nav>
                 </aside>
+                <ul
+                  role="list"
+                  className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+                >
+                  Hada grid mgad khass hir itrendra shop list dial user w raha
+                  fetchitha mn backend
+                </ul>
               </div>
             </div>
           </div>
