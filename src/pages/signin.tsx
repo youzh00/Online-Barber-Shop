@@ -155,7 +155,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   });
   console.log("session");
   if (session) {
-    return { redirect: { destination: "/" } };
+    return { redirect: { destination: "/home" } };
   }
 
   const providers = await getProviders();
