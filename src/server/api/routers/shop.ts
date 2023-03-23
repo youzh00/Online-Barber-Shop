@@ -117,7 +117,7 @@ export const shopRouter = createTRPCRouter({
       });
       return shop;
     }),
-  getShopById: barberProcedure
+  getShopById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ input, ctx }) => {
       const shop = await ctx.prisma.shop.findUnique({
