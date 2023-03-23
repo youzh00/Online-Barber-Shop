@@ -4,11 +4,18 @@ import {
   MapPinIcon,
   ArrowLeftIcon,
 } from "@heroicons/react/24/outline";
-import { Fragment, useEffect, useState } from "react";
+import {
+  type Dispatch,
+  type SetStateAction,
+  Fragment,
+  useEffect,
+  useState,
+} from "react";
 import { api } from "../utils/api";
 import axios from "axios";
 import { env } from "../env.mjs";
 import useStore from "../store/useStore";
+import type { Shop } from "@prisma/client";
 
 const cities = [
   { city: "Casablanca", lat: 33.5992, lng: -7.62 },
@@ -36,13 +43,21 @@ const services = [
   "Beard shave and dye",
 ];
 
-export default function HomeSection() {
+interface HomeSectionProps {
+  setShops: Dispatch<SetStateAction<Shop[]>>;
+}
+
+export default function HomeSection({ setShops }: HomeSectionProps) {
   const [openServices, setOpenServices] = useState(false);
   const [openLocation, setOpenLocation] = useState(false);
   const [searchLocation, setSearchLocation] = useState("");
   const [searchServices, setSearchServices] = useState("");
 
-  const { data: shops, mutate: mutateShops } = api.shop.findShop.useMutation();
+  const { mutate: mutateShops } = api.shop.findShop.useMutation({
+    onSuccess: (data) => {
+      setShops(data);
+    },
+  });
 
   const service = useStore((state) => state.service);
   const setService = useStore((state) => state.setService);
